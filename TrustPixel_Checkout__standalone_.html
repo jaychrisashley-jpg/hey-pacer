@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustPixel — Authorize hold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>/* cyrillic */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic */
+
+/* latin-ext */
+
+/* latin */
+
+/* cyrillic */
+
+/* latin-ext */
+
+/* latin */
+
+</style>
+<style>
+  :root{
+    --ink:#30313d; --ink2:#6a7383; --ink3:#8792a2;
+    --line:#e6e6eb; --line2:#d9dce3; --field:#ffffff;
+    --bg:#ffffff; --bg-soft:#f7f8fa;
+    --coral:#3c4257; --coral-hover:#4a5163; --coral-press:#2d323f;
+    --coral-wash:#f7f8fa; --coral-line:#e6e6eb;
+    --radius:8px;
+    --sys:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--sys); color:var(--ink); background:var(--bg);
+    -webkit-font-smoothing:antialiased; font-size:15px; line-height:1.5;
+  }
+  .topbar{height:3px;background:linear-gradient(90deg,#00d4ff 0%,#5433ff 100%);width:100%}
+  .wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 3px)}
+  @media(max-width:880px){.wrap{grid-template-columns:1fr}.left{border-right:0!important;border-bottom:1px solid var(--line)}}
+
+  /* ---------------- LEFT ---------------- */
+  .left{padding:40px 56px 40px 8px;border-right:1px solid var(--line);display:flex;flex-direction:column}
+  .left-inner{max-width:400px;margin-left:auto;width:100%;flex:1;display:flex;flex-direction:column}
+  .merch{display:flex;align-items:center;gap:10px;margin-bottom:38px}
+  .back{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);text-decoration:none;font-size:17px;line-height:1;margin-right:2px;transition:.15s}
+  .back:hover{background:var(--bg-soft);color:var(--ink)}
+  .merch-name{font-family:var(--sys);font-weight:600;font-size:15px;color:var(--ink);letter-spacing:-.005em}
+  .test{font-size:11px;font-weight:700;letter-spacing:.04em;color:#9a6b00;background:#ffe9b3;border-radius:5px;padding:3px 7px;text-transform:uppercase;margin-left:2px}
+
+  .pay-eyebrow{font-size:15px;color:var(--ink2);margin:0 0 6px}
+  .amount{font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--ink);font-family:'Jost',var(--sys);line-height:1.1;display:flex;align-items:baseline;gap:9px}
+  .amount .cur{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:.02em}
+  .hold-tag{display:inline-flex;align-items:center;gap:7px;margin-top:11px;font-size:12.5px;font-weight:600;color:var(--coral-press);background:var(--coral-wash);border:1px solid var(--coral-line);border-radius:999px;padding:5px 11px}
+  .hold-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3)}
+
+  .item{display:flex;align-items:flex-start;gap:14px;padding:26px 0 22px;margin-top:26px;border-top:1px solid var(--line)}
+  .thumb{width:46px;height:46px;border-radius:8px;background:#f1f1f4;border:1px solid var(--line);flex-shrink:0;display:grid;place-items:center;overflow:hidden}
+  .item-t{flex:1;min-width:0}
+  .item-t .nm{font-weight:600;font-size:14.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
+  .item-t .sub{font-size:13px;color:var(--ink3);margin-top:2px}
+  .item-price{font-weight:600;font-size:14px;color:var(--ink);white-space:nowrap}
+  .item-price small{display:block;font-weight:500;font-size:11px;color:var(--ink3);text-align:right;margin-top:2px}
+
+  .mandate{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:24px}
+  .mandate-hd{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--bg-soft);border-bottom:1px solid var(--line)}
+  .mandate-hd .dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
+  .mandate-hd .lbl{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+  .mandate-hd .sig{margin-left:auto;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--ink3);font-family:'Jost',var(--sys)}
+  .m-row{display:flex;justify-content:space-between;gap:16px;padding:9px 14px;font-size:13px;border-top:1px solid #f0f0f3}
+  .m-row:first-child{border-top:0}
+  .m-row .k{color:var(--ink3)}
+  .m-row .v{color:var(--ink);font-weight:600;text-align:right}
+  .m-row .v .mdl{display:inline-block;font-size:11px;font-weight:700;color:var(--ink2);background:#eef0f3;border-radius:5px;padding:2px 6px;margin-left:4px}
+
+  .sum{border-top:1px solid var(--line);padding-top:16px;margin-bottom:18px}
+  .sum-row{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+  .sum-row .v{color:var(--ink)}
+  .sum-row.tot{font-weight:700;color:var(--ink);font-size:15px;padding-top:11px;border-top:1px solid var(--line);margin-top:3px}
+  .sum-row.muted .v{color:var(--ink3);font-weight:500}
+
+  .how{background:var(--bg-soft);border-radius:10px;padding:15px 16px;margin-bottom:auto}
+  .how h4{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2)}
+  .how ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .how li{display:flex;gap:9px;font-size:12.5px;line-height:1.45;color:var(--ink2)}
+  .how li .n{flex-shrink:0;width:17px;height:17px;border-radius:50%;background:#fff;border:1px solid var(--line2);color:var(--ink2);font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+  .how li b{color:var(--ink);font-weight:600}
+
+  .foot{display:flex;align-items:center;gap:14px;padding-top:26px;margin-top:26px;font-size:12px;color:var(--ink3)}
+  .foot .stripe{display:flex;align-items:center;gap:5px}
+  .foot .stripe b{font-weight:700;color:var(--ink2);font-family:var(--sys)}
+  .foot a{color:var(--ink3);text-decoration:none}
+  .foot a:hover{color:var(--ink2)}
+  .foot .sep{color:var(--line2)}
+
+  /* ---------------- RIGHT ---------------- */
+  .right{padding:40px 8px 40px 56px;display:flex;flex-direction:column}
+  .right-inner{max-width:400px;width:100%}
+  .applepay{width:100%;height:44px;border:0;border-radius:7px;background:#000;color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-family:var(--sys)}
+  .applepay:hover{background:#1a1a1a}
+  .applepay .logo{font-size:17px;margin-right:1px}
+  .ordiv{display:flex;align-items:center;gap:12px;color:var(--ink3);font-size:12.5px;margin:18px 0 20px}
+  .ordiv::before,.ordiv::after{content:"";height:1px;background:var(--line);flex:1}
+
+  .sec-label{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}
+  .field-group{margin-bottom:18px}
+  .lbl{display:block;font-size:12.5px;color:var(--ink2);margin:0 0 6px}
+  .inp{width:100%;height:42px;border:1px solid var(--line2);border-radius:7px;padding:0 12px;font-size:14.5px;font-family:var(--sys);color:var(--ink);background:var(--field);transition:.12s;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+  .inp::placeholder{color:#b3b9c4}
+  .inp:focus{outline:none;border-color:#a3b0d4;box-shadow:0 0 0 3px rgba(60,66,87,.12)}
+  .with-icon{position:relative}
+  .with-icon .ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#c2c8d2;pointer-events:none}
+
+  .stack{border:1px solid var(--line2);border-radius:7px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+  .stack .inp{border:0;border-radius:0;box-shadow:none}
+  .stack .inp:focus{box-shadow:none;border:0;background:#fff}
+  .stack .row{display:flex}
+  .stack .row + .row{border-top:1px solid var(--line2)}
+  .stack .row .inp + .inp{border-left:1px solid var(--line2)}
+  .stack .row.focused{box-shadow:0 0 0 3px rgba(60,66,87,.12);position:relative;z-index:2;border-radius:7px}
+  .cardnum{position:relative}
+  .cardnum .brands{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;gap:4px}
+  .brand{height:16px;width:24px;border-radius:3px;display:grid;place-items:center;font-size:7.5px;font-weight:800;color:#fff;letter-spacing:.02em}
+  .select-wrap{position:relative}
+  .select-wrap select{width:100%;height:42px;border:1px solid var(--line2);border-radius:7px;padding:0 12px;font-size:14.5px;font-family:var(--sys);color:var(--ink);background:var(--field);appearance:none;cursor:pointer;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+  .select-wrap select:focus{outline:none;border-color:#a3b0d4;box-shadow:0 0 0 3px rgba(60,66,87,.12)}
+  .select-wrap .chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;font-size:11px}
+  .addr-stack{border:1px solid var(--line2);border-radius:7px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+  .addr-stack .inp,.addr-stack select{border:0;border-radius:0;box-shadow:none;width:100%}
+  .addr-stack > * + *{border-top:1px solid var(--line2)}
+  .addr-stack .select-wrap select{border:0}
+  .manual{display:inline-block;margin-top:9px;font-size:12.5px;color:var(--coral-press);text-decoration:none;font-weight:500}
+  .manual:hover{text-decoration:underline}
+
+  .check{display:flex;align-items:center;gap:9px;margin:14px 0 0;cursor:pointer;font-size:13.5px;color:var(--ink)}
+  .check input{position:absolute;opacity:0;width:0;height:0}
+  .check .box{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--line2);flex-shrink:0;display:grid;place-items:center;transition:.12s}
+  .check input:checked + .box{background:var(--coral);border-color:var(--coral)}
+  .check .box svg{opacity:0;transition:.12s}
+  .check input:checked + .box svg{opacity:1}
+
+  .auth-note{margin-top:24px;border:1px solid var(--coral-line);background:var(--coral-wash);border-radius:9px;padding:14px 15px}
+  .auth-note .h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--coral-press);margin-bottom:7px}
+  .auth-note .h .dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
+  .auth-note p{margin:0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+  .auth-note p + p{margin-top:7px}
+  .auth-note b{color:var(--coral-press);font-weight:700}
+
+  .pay-btn{width:100%;height:46px;margin-top:20px;border:0;border-radius:8px;background:var(--coral);color:#fff;font-size:15.5px;font-weight:700;font-family:var(--sys);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.14s;letter-spacing:.01em}
+  .pay-btn:hover{background:var(--coral-hover)}
+  .pay-btn:active{background:var(--coral-press);transform:translateY(1px)}
+  .pay-btn .lock{font-size:13px;opacity:.9}
+  .pay-fine{margin:13px 2px 0;font-size:11.5px;line-height:1.5;color:var(--ink3);text-align:center}
+  .pay-fine a{color:var(--ink3);text-decoration:underline}
+
+  .done-veil{position:fixed;inset:0;background:rgba(255,255,255,.96);display:none;place-items:center;z-index:50;padding:24px}
+  .done-veil.on{display:grid}
+  .done-card{max-width:380px;text-align:center}
+  .done-ring{width:58px;height:58px;border-radius:50%;background:var(--coral-wash);border:1.5px solid var(--coral-line);display:grid;place-items:center;margin:0 auto 18px}
+  .done-card h2{font-family:'Jost',var(--sys);font-weight:600;font-size:21px;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
+  .done-card p{font-size:14px;color:var(--ink2);line-height:1.55;margin:0 0 6px}
+  .done-card .amt{font-weight:700;color:var(--ink)}
+  .done-card .reset{margin-top:20px;background:none;border:0;color:var(--coral-press);font-size:13px;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="topbar"></div>
+<div class="wrap">
+
+  <!-- ============ LEFT: order + mandate ============ -->
+  <div class="left">
+    <div class="left-inner">
+      <div class="merch">
+        <a class="back" href="index.html" aria-label="Back">‹</a>
+        <span class="merch-name">TrustPixel</span>
+        <span class="test">Test mode</span>
+      </div>
+
+      <p class="pay-eyebrow">Authorization hold for TrustPixel</p>
+      <div class="amount"><span id="amt">$84.00</span><span class="cur">USD</span></div>
+      <span class="hold-tag"><span class="dot"></span>Hold — authorized, not charged</span>
+
+      <div class="item">
+        <div class="thumb" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+            <path d="M3 21c2.5.3 5-.2 7.5-1.8 2-1.3 3.4-3 5.4-4.2 1.7-1 3.2-.8 4.3.6l1.4 1.8c.8 1 1.9 1.6 3.2 1.8l2.6.4c1.4.2 2.6 1.1 3 2.5l.2.7c.2.9-.4 1.7-1.3 1.7H4.5C3.7 25 3 24.3 3 23.5V21z" fill="#c9cdd6"></path>
+            <path d="M3 21c2.5.3 5-.2 7.5-1.8 2-1.3 3.4-3 5.4-4.2" stroke="#9aa0ad" stroke-width="1.1" fill="none" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="item-t">
+          <div class="nm">Nike Pegasus</div>
+          <div class="sub">Men's US 10 · Qty 1</div>
+        </div>
+        <div class="item-price">$84.00<small>all-in max</small></div>
+      </div>
+
+      <div class="mandate">
+        <div class="mandate-hd">
+          <span class="dot"></span>
+          <span class="lbl">Signed mandate</span>
+          <span class="sig">TPX·9F2A…E1</span>
+        </div>
+        <div class="m-row"><span class="k">Buy</span><span class="v">Nike Pegasus · Men's US 10</span></div>
+        <div class="m-row"><span class="k">Eligible models</span><span class="v"><span class="mdl">41</span><span class="mdl">40</span><span class="mdl">39</span></span></div>
+        <div class="m-row"><span class="k">Ship to</span><span class="v">San Francisco · 94110</span></div>
+        <div class="m-row"><span class="k">Deliver by</span><span class="v">Jul 24, 2026</span></div>
+        <div class="m-row"><span class="k">Won't exceed</span><span class="v">$84.00 all-in</span></div>
+      </div>
+
+      <div class="sum">
+        <div class="sum-row"><span>Authorization hold</span><span class="v">$84.00</span></div>
+        <div class="sum-row muted"><span>Captured only if secured ≤ your price</span><span class="v">$0.00 today</span></div>
+        <div class="sum-row tot"><span>Hold total</span><span class="v">$84.00</span></div>
+      </div>
+
+      <div class="how">
+        <h4>How this hold works</h4>
+        <ul>
+          <li><span class="n">1</span><span>We place a <b>hold</b> on your card for $84.00. Nothing is charged now.</span></li>
+          <li><span class="n">2</span><span>TrustPixel sources your Nike Pegasus across verified sellers until <b>Jul 24</b>.</span></li>
+          <li><span class="n">3</span><span>The hold is <b>captured only</b> when we secure a pair at or below $84.00 all-in. Otherwise it's released.</span></li>
+        </ul>
+      </div>
+
+      <div class="foot">
+        <span class="stripe">Powered by <b>stripe</b></span>
+        <span class="sep">·</span>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RIGHT: payment ============ -->
+  <div class="right">
+    <div class="right-inner">
+      <button class="applepay" type="button" onclick="finish()"><span class="logo"></span>Pay</button>
+      <div class="ordiv">Or authorize with card</div>
+
+      <div class="field-group">
+        <p class="sec-label">Contact</p>
+        <input class="inp" id="email" type="email" placeholder="Email" value="">
+      </div>
+
+      <div class="field-group">
+        <p class="sec-label">Shipping address</p>
+        <div class="addr-stack">
+          <input class="inp" id="name" placeholder="Full name">
+          <div class="select-wrap">
+            <select id="country"><option>United States</option><option>Canada</option><option>United Kingdom</option></select>
+            <span class="chev">▾</span>
+          </div>
+          <input class="inp" id="addr" placeholder="Address">
+        </div>
+        <a class="manual" href="#">Enter address manually</a>
+      </div>
+
+      <div class="field-group">
+        <p class="sec-label">Payment details</p>
+        <span class="lbl">Card information</span>
+        <div class="stack">
+          <div class="row cardnum">
+            <input class="inp" id="card" placeholder="1234 1234 1234 1234" inputmode="numeric" autocomplete="cc-number">
+            <span class="brands">
+              <span class="brand" style="background:#1a1f71">VISA</span>
+              <span class="brand" style="background:#eb001b">MC</span>
+              <span class="brand" style="background:#006fcf">AMEX</span>
+              <span class="brand" style="background:#0a0a0a">JCB</span>
+            </span>
+          </div>
+          <div class="row">
+            <input class="inp" id="exp" placeholder="MM / YY" inputmode="numeric" autocomplete="cc-exp">
+            <input class="inp" id="cvc" placeholder="CVC" inputmode="numeric" maxlength="4" autocomplete="cc-csc">
+          </div>
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="samebill" checked="">
+        <span class="box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.5 9.5 3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+        <span>Billing address is same as shipping</span>
+      </label>
+
+      <div class="auth-note">
+        <div class="h"><span class="dot"></span>This is a hold, not a payment</div>
+        <p>Submitting authorizes TrustPixel to hold <b>$84.00</b> on your card. Your card is <b>charged only</b> if we secure your Nike Pegasus at or below $84.00 all-in, shipped to 94110 by Jul 24. If we can't, the hold is released in full.</p>
+        <p>By authorizing, you commit to the purchase under this mandate. <b>All sales are final</b> once captured — no returns, except when the delivered product doesn't match your order mandate.</p>
+      </div>
+
+      <button class="pay-btn" onclick="finish()"><span class="lock">🔒</span>Authorize hold · $84.00</button>
+      <p class="pay-fine">You authorize a hold under your signed mandate. <a href="#">Terms</a> and <a href="#">mandate details</a> apply.</p>
+    </div>
+  </div>
+</div>
+
+<div class="done-veil" id="done">
+  <div class="done-card">
+    <div class="done-ring">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19 7" stroke="#3c4257" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2>Hold authorized</h2>
+    <p>We've placed a <span class="amt">$84.00</span> hold on your card. Nothing is charged yet.</p>
+    <p>TrustPixel is now sourcing your Nike Pegasus. We'll capture only if we secure it at or below your price by Jul 24 — and email you either way.</p>
+    <button class="reset" onclick="document.getElementById('done').classList.remove('on')">← Back to checkout</button>
+  </div>
+</div>
+
+<script>
+  // light input niceties
+  var card=document.getElementById('card');
+  card.addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+    this.value=v;
+  });
+  var exp=document.getElementById('exp');
+  exp.addEventListener('input',function(){
+    var v=this.value.replace(/\D/g,'').slice(0,4);
+    if(v.length>2)v=v.slice(0,2)+' / '+v.slice(2);
+    this.value=v;
+  });
+  // focus ring on the grouped card stack
+  document.querySelectorAll('.stack .row').forEach(function(row){
+    row.querySelectorAll('input').forEach(function(i){
+      i.addEventListener('focus',function(){row.classList.add('focused');});
+      i.addEventListener('blur',function(){row.classList.remove('focused');});
+    });
+  });
+  function finish(){ document.getElementById('done').classList.add('on'); }
+
+  /* ---- populate the hold from ?price=&shoe=&color=&size=&gender=&models=&zip=&by=&neguntil= ---- */
+  (function(){
+    function qp(k){ return new URLSearchParams(location.search).get(k); }
+    function fmt(s,wy){ if(!s) return ''; var d=new Date(s+'T00:00:00'); if(isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', wy?{month:'short',day:'numeric',year:'numeric'}:{month:'short',day:'numeric'}); }
+    var price=qp('price'), shoe=qp('shoe'), color=qp('color'), size=qp('size'),
+        gender=qp('gender'), models=qp('models'), zip=qp('zip'), by=qp('by'), neg=qp('neguntil')||qp('by');
+    if(!price && !shoe) return; // no order params -> keep demo defaults
+    var p2 = price ? (Math.round(parseFloat(price))).toFixed(2) : null;
+    var deliverFull=fmt(by,true), negShort=fmt(neg,false);
+    var reps=[];
+    if(p2) reps.push(['84.00', p2]);
+    if(negShort) reps.push(['Jul 24', negShort]);   // every "source/secure until" date = the negotiation deadline
+    if(zip) reps.push(['94110', zip]);
+    if(shoe) reps.push(['Nike Pegasus', shoe]);
+    if(size) reps.push(['US 10', 'US '+size]);
+    if(gender) reps.push(["Men's", gender]);
+    var w=document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null), node, nodes=[];
+    while(node=w.nextNode()) nodes.push(node);
+    nodes.forEach(function(nd){ var t=nd.nodeValue, o=t;
+      reps.forEach(function(r){ if(t.indexOf(r[0])>-1) t=t.split(r[0]).join(r[1]); });
+      if(t!==o) nd.nodeValue=t; });
+    // deliver-by row carries its OWN date (overrides the blanket negotiation-date pass above); eligible models = the order's gens
+    document.querySelectorAll('.mandate .m-row').forEach(function(r){
+      var k=r.querySelector('.k'), v=r.querySelector('.v'); if(!k||!v) return;
+      if(/deliver by/i.test(k.textContent) && deliverFull) v.textContent=deliverFull;
+      if(/eligible/i.test(k.textContent) && models) v.innerHTML=models.split('/').map(function(g){return '<span class="mdl">'+g+'</span>';}).join('');
+    });
+    var sub=document.querySelector('.item-t .sub');
+    if(sub) sub.textContent=(gender?gender+' \u00b7 ':'')+'US '+(size||'')+(color&&color!=='Any color'?' \u00b7 '+color:'')+' \u00b7 Qty 1';
+    if(shoe) document.title='TrustPixel \u2014 Authorize hold \u00b7 '+shoe;
+  })();
+</script>
+
+
+</body></html>
