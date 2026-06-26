@@ -1511,7 +1511,7 @@ function startForm(){
   S.shoe=null; S.gens=[]; S.colors=[]; S.size=null; S.zip=null; S.gender="Men's"; S.deliver=defaultDeliver(); S.negUntil=null;
   CV.done={}; CV.step=null; CV.editing=null; CARDEDIT=null; orderExpanded=false;
   updateOrder();
-  var inp=document.getElementById('shoeFld'); if(inp) inp.focus();
+  // no auto-focus: the suggestion list should only open once the user taps into the shoe field
 }
 function orderComplete(){ return !!(S.shoe && S.size && S.zip); }
 function updateSend(){
