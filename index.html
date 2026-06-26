@@ -444,8 +444,12 @@ button.v-text:hover{color:var(--goldDeep)}
 #waitsave .co-card{max-width:524px}
 .nyp-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
 .nyp-cap{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
-.nyp-big{font-size:42px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.05;margin:2px 0 6px}
+.nyp-big{font-size:42px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.05;margin:2px 0 6px;display:flex;align-items:baseline}
 .nyp-big .u{font-size:18px;font-weight:700;color:var(--ink2);margin-left:6px}
+.nyp-cur{font-size:42px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.nyp-price{font-family:inherit;font-size:42px;font-weight:800;letter-spacing:-.02em;color:var(--ink);border:0;background:transparent;padding:0;margin:0;width:2.8ch;field-sizing:content;outline:none;border-bottom:2px dashed rgba(169,117,10,.45);border-radius:0;-moz-appearance:textfield}
+.nyp-price:hover{border-bottom-color:var(--goldDeep)}
+.nyp-price:focus{border-bottom-color:var(--gold)}
 .nyp-fine{font-size:12px;color:var(--ink2);line-height:1.5;margin:0 0 16px}
 .nyp-fine b{color:var(--ink);font-weight:700}
 .nyp-slider{margin:2px 0 8px}
@@ -755,7 +759,7 @@ button.v-text:hover{color:var(--goldDeep)}
         <span class="nyp-cap">Your price</span>
         <span class="nyp-pct" id="nyp-pct">— off MSRP</span>
       </div>
-      <div class="nyp-big" id="nyp-big">—</div>
+      <div class="nyp-big" id="nyp-big"><span class="nyp-cur">$</span><input id="nyp-price" class="nyp-price" type="text" inputmode="numeric" value="—" oninput="nypType(this.value)" onfocus="nypFocus()" onblur="nypBlur()" aria-label="Your price"><span class="u">all-in</span></div>
       <p class="nyp-fine">Includes taxes &amp; shipping to <b id="nyp-zip">—</b> · by <b id="nyp-date">—</b></p>
       <div class="nyp-slider">
         <input type="range" id="nyp-range" min="0" max="100" value="100" oninput="nypSlide(this.value)">
@@ -867,7 +871,7 @@ function liveParse(){
   const sh=findShoe(t);
   if(sh && (!S.shoe || S.shoe.id!==sh.id)){ S.shoe=sh; S.colors=[]; S.gens=[sh.gens[0]]; }
   // a typed generation (e.g. "pegasus 40") selects that gen
-  if(S.shoe){ const g=S.shoe.gens.find(x=>new RegExp('\\b'+x.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')+'\\b','i').test(t)); if(g)S.gens=[g]; }
+  if(S.shoe){ const g=S.shoe.gens.find(x=>new RegExp('\\b'+x.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')+'\\b','i').test(t)); if(g){S.gens=[g]; CV.done.gens=true;} }
   // strip brand + name + gens before reading size/zip
   let rest=t;
   if(S.shoe){ const esc=s=>s.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&');
@@ -880,7 +884,7 @@ function liveParse(){
 }
 function send(){ liveParse(); const inp=document.getElementById('inp'); inp.value=''; inp.focus(); render(); }
 function pickHint(id){ S.shoe=CATALOG.find(c=>c.id===id); S.colors=[]; S.gens=[S.shoe.gens[0]]; render(); document.getElementById('inp').focus(); }
-function toggleGen(g){ const i=S.gens.indexOf(g); if(i>-1)S.gens.splice(i,1); else S.gens.push(g); render(); }
+function toggleGen(g){ const i=S.gens.indexOf(g); if(i>-1)S.gens.splice(i,1); else S.gens.push(g); CV.done.gens=true; render(); updateOrder(); }
 
 /* ---- direct edits in the card ---- */
 function toggleColor(n){ const i=S.colors.indexOf(n); if(i>-1)S.colors.splice(i,1); else S.colors.push(n); render(); }
@@ -1085,11 +1089,11 @@ function nypBigText(){
   return "$"+my+'<span class="u">all-in</span>';
 }
 function nypAdvice(){
-  var f=WS.frac, allGens=WS.gens.length>=WS.shoe.gens.length;
+  var f=WS.frac;
   if(f>=0.93) return "";
-  if(f>=0.86) return "Pacer can usually hit this within the 5-day window.";
-  if(f>=0.80) return "Going lower. Pacer will work all 5 days to land it.";
-  return "Aggressive target; the lower you go, the less likely it fills within the 5-day window.";
+  if(f>=0.86) return "Good chance Pacer can land this.";
+  if(f>=0.80) return "Pacer can likely work this for you, though it's not a sure thing.";
+  return "Aggressive target; the lower you go, the less likely Pacer can land it.";
 }
 function nypNum(v,cls){ return '<span class="nyp-num '+cls+'">$'+v+'</span>'; }
 function genIncluded(g){ return !WS.exGen[g] && WS.colors.some(function(c){ return !WS.exSku[g+"|"+c]; }); }
@@ -1148,7 +1152,8 @@ function nypRender(){
   var today=wsToday(WS.headGen,WS.headColor), floor=Math.round(today*WS.floorFrac);
   document.getElementById("nyp-today").textContent="Today $"+today;
   document.getElementById("nyp-floor").textContent="Floor $"+floor;
-  document.getElementById("nyp-big").innerHTML=nypBigText();
+  var pin=document.getElementById("nyp-price");
+  if(pin && document.activeElement!==pin) pin.value=wsMy(WS.headGen,WS.headColor);
   var my=wsMy(WS.headGen,WS.headColor), pct=Math.max(0,Math.round((1-my/wsMsrp())*100));
   var pe=document.getElementById("nyp-pct"); if(pe) pe.textContent=pct+"% off MSRP";
   document.getElementById("nyp-advice").textContent=nypAdvice();
@@ -1164,8 +1169,21 @@ function nypRender(){
 function nypTogglePrimary(){ WS.open=!WS.open; nypRender(); }
 function nypToggleGen(g){ WS.openGen[g]=!WS.openGen[g]; nypRender(); }
 function nypSlide(val){ WS.frac=WS.floorFrac+(val/100)*(1-WS.floorFrac); WS.ov={}; nypRender(); }
+function nypType(raw){
+  var today=wsToday(WS.headGen,WS.headColor);
+  var n=parseInt(String(raw).replace(/[^0-9]/g,''),10);
+  if(isNaN(n)) return;          // mid-edit / empty — wait for a number
+  if(n>today) n=today;          // never above today's lowest price
+  if(n<1) n=1;
+  WS.frac=n/today; WS.ov={};    // a typed price resets per-SKU overrides, like the slider
+  var sv=Math.round((WS.frac-WS.floorFrac)/(1-WS.floorFrac)*100);
+  document.getElementById("nyp-range").value=Math.max(0,Math.min(100,sv));
+  nypRender();
+}
+function nypFocus(){ var p=document.getElementById("nyp-price"); if(p){ p.value=wsMy(WS.headGen,WS.headColor); setTimeout(function(){ p.select(); },0); } }
+function nypBlur(){ var p=document.getElementById("nyp-price"); if(p) p.value=wsMy(WS.headGen,WS.headColor); }
 function openWaitSave(btn){
-  WS={shoe:S.shoe, gens:S.gens.slice().sort(function(a,b){return S.shoe.gens.indexOf(a)-S.shoe.gens.indexOf(b);}), colors:pickedColors(), unit:"usd", frac:1, floorFrac:0.75, ov:{}, open:false, openGen:{}, exGen:{}, exSku:{}};
+  WS={shoe:S.shoe, gens:S.gens.slice().sort(function(a,b){return S.shoe.gens.indexOf(a)-S.shoe.gens.indexOf(b);}), colors:pickedColors(), unit:"usd", frac:1, floorFrac:0.70, ov:{}, open:false, openGen:{}, exGen:{}, exSku:{}};
   var best=null; WS.gens.forEach(function(g){ WS.colors.forEach(function(c){ var p=wsToday(g,c); if(!best||p<best.p)best={g:g,c:c,p:p}; }); });
   WS.headGen=best.g; WS.headColor=best.c;
   document.getElementById("nyp-zip").textContent=S.zip||"—";
@@ -1431,7 +1449,7 @@ function updateOrder(){
   var d=CV.done||{};
   if(!S.deliver) S.deliver=defaultDeliver();
   // per-row completion (drives the green check + progress count)
-  var rGens=!!(S.shoe && S.gens && S.gens.length);
+  var rGens=!!(S.shoe && S.gens && S.gens.length && d.gens);
   var cShoe=!!S.shoe, cSize=!!S.size, cZip=!!S.zip, cColors=!!S.shoe, cDeliver=!!S.deliver;
   setRow("shoe", S.shoe?(S.shoe.brand+" "+S.shoe.name):"", cShoe);
   setRow("gens", rGens?S.gens.join(" / "):"", rGens);
@@ -1460,7 +1478,7 @@ function liveType(){
   if(ms.length===1){ var sh=ms[0]; if(!S.shoe || S.shoe.id!==sh.id){ S.shoe=sh; S.colors=[]; S.gens=[sh.gens[0]]; } }
   if(S.shoe){ CV.done.shoe=true; CV.done.models=true; }
   // a typed generation (e.g. "pegasus 40") selects that gen
-  if(S.shoe){ const g=S.shoe.gens.find(x=>new RegExp('\\b'+x.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')+'\\b','i').test(t)); if(g)S.gens=[g]; }
+  if(S.shoe){ const g=S.shoe.gens.find(x=>new RegExp('\\b'+x.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&')+'\\b','i').test(t)); if(g){S.gens=[g]; CV.done.gens=true;} }
   // strip brand + name + gens before reading size/zip
   let rest=t;
   if(S.shoe){ const esc=s=>s.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&');
@@ -1577,7 +1595,7 @@ function commitGens(){
   var ord=S.gens.slice().sort(function(a,b){return S.shoe.gens.indexOf(a)-S.shoe.gens.indexOf(b);});
   addUser(ord.join(", ")); S.gens=ord; CV.done.gens=true; askGender();
 }
-function toggleGenChip(g){ var i=S.gens.indexOf(g); if(i>-1){ if(S.gens.length>1) S.gens.splice(i,1); } else { S.gens.push(g); } renderGenQuick(); updateOrder(); }
+function toggleGenChip(g){ var i=S.gens.indexOf(g); if(i>-1){ if(S.gens.length>1) S.gens.splice(i,1); } else { S.gens.push(g); } CV.done.gens=true; renderGenQuick(); updateOrder(); }
 function askGender(){
   if(orderComplete()){ return startSearch(); }
   if(CV.done.gender){ return askSize(); }
