@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pacer — Search</title>
+<title>Pacer. Search</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -46,14 +46,93 @@
   --shadow:0 1px 2px rgba(16,36,59,.04),0 10px 34px rgba(16,36,59,.07);
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 html,body{height:100%}
 body{margin:0;font-family:'Archivo',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5;display:flex;flex-direction:column;min-height:100%}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select{font-family:inherit}
 .mono{font-variant-numeric:tabular-nums}
 
-.top{display:flex;align-items:center;justify-content:center;padding:26px 24px 0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px 0;max-width:760px;margin:0 auto;width:100%}
+.topnav{display:flex;align-items:center;gap:8px}
+.navlink{font-size:14px;font-weight:700;color:var(--ink2);text-decoration:none;padding:8px 14px;border-radius:var(--rpill);transition:.15s}
+.navlink:hover{color:var(--navy);background:var(--surface)}
+.navlink.signin{color:var(--navy);border:1.5px solid var(--line)}
+.navlink.signin:hover{border-color:var(--navy);background:var(--surface)}
 .logo{font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--navy);display:flex;align-items:center;gap:9px}
+/* home FAQ section */
+.faqsec{max-width:680px;margin:8px auto 48px;padding:0 22px;width:100%;scroll-margin-top:18px}
+.faqh{font-size:22px;font-weight:800;letter-spacing:-.01em;color:var(--ink);margin:0 0 10px}
+.faqintro{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0 0 22px;max-width:620px}
+.faqlead{display:flex;flex-direction:column;gap:20px;margin:0 0 30px}
+.faqlead-q{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.01em;margin:0 0 6px}
+.faqlead-a{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0}
+.faqlead-a b{color:var(--ink)}
+.faqlead-a em{font-style:italic}
+.faqh-more{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);margin:0 0 11px}
+.faqlist{display:flex;flex-direction:column;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.faqitem{border-top:1px solid var(--line)}
+.faqitem:first-child{border-top:0}
+.faqitem>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;font-size:15.5px;font-weight:700;color:var(--navy)}
+.faqitem>summary::-webkit-details-marker{display:none}
+.faqitem>summary:hover{background:var(--paper)}
+.faqchev{flex-shrink:0;color:var(--ink2);font-size:13px;transition:transform .2s}
+.faqitem[open]>summary .faqchev{transform:rotate(180deg)}
+.faqa{padding:0 20px 18px;font-size:14.5px;line-height:1.55;color:var(--ink2)}
+/* ---- orders page (sign-in view) ---- */
+#orderspage{position:fixed;inset:0;z-index:250;background:var(--paper);overflow-y:auto;display:none}
+.ord-topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1000px;margin:0 auto;width:100%;padding:20px 24px 0}
+.ord-back{font-size:14px;font-weight:700;color:var(--ink2);background:none;border:0;cursor:pointer;font-family:inherit;padding:8px 12px;border-radius:var(--rpill);transition:.15s}
+.ord-back:hover{color:var(--navy);background:var(--surface)}
+.ord-wrap{max-width:1000px;margin:0 auto;padding:18px 24px 64px;width:100%}
+.ord-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.ord-title{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--goldDeep)}
+.ord-tabs{display:inline-flex;gap:2px;background:#EFE9DC;border-radius:999px;padding:5px}
+.ord-tabs button{font-size:14px;font-weight:700;color:var(--ink2);padding:8px 17px;border-radius:999px;background:none;border:0;cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap}
+.ord-tabs button.on{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
+.ord-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.ord-scroll{overflow-x:auto}
+.ord-colhd,.ord-row{display:grid;grid-template-columns:104px minmax(180px,1fr) 76px 86px 90px 186px 108px;align-items:center;gap:14px;padding:16px 22px;min-width:900px}
+.ord-date{font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ord-colhd{background:#F7F5F0;border-bottom:1px solid var(--line);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.ord-colhd span:nth-child(3),.ord-colhd span:nth-child(7){text-align:right}
+.ord-row{border-top:1px solid var(--line)}
+.ord-row.danger{background:#FBEEEA}
+.ord-id{font-size:14px;font-weight:600;color:var(--ink2);letter-spacing:.01em}
+.ord-item b{display:block;font-size:16px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.ord-meta{font-size:13px;color:var(--ink2)}
+.ord-price{text-align:right;font-size:16px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.ord-status{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.ord-badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;padding:5px 11px;border-radius:999px}
+.ord-badge.filled{background:#E7F3EC;color:#15603b}
+.ord-badge.paused{background:var(--goldWash);color:var(--goldDeep)}
+.ord-badge.searching{background:#E8EDF3;color:var(--navy)}
+.ord-badge.searching::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--navy)}
+.ord-badge.suspended{background:none;color:#A8341F;padding-left:0}
+.ord-badge.expired,.ord-badge.canceled{background:#ECE7DB;color:var(--ink2)}
+.ord-sub{font-size:12.5px;color:var(--ink2)}
+.ord-act{text-align:right}
+.ord-btn{font-family:inherit;font-size:14px;font-weight:700;color:var(--navy);background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:9px 18px;cursor:pointer;transition:.15s}
+.ord-btn:hover{border-color:var(--navy)}
+.ord-btn.solid{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ord-btn.solid:hover{background:var(--navy2)}
+.ord-empty{padding:40px;text-align:center;color:var(--ink2);font-size:15px}
+.ord-row.has-counter{box-shadow:inset 3px 0 0 var(--gold)}
+.ord-save{font-weight:800;color:#15603b}
+.ord-cpending{font-weight:800;color:var(--goldDeep)}
+/* dashboard stats */
+.ord-stats{display:flex;gap:12px;margin:0 0 16px;flex-wrap:wrap}
+.ord-stat{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 18px}
+.os-n{font-size:24px;font-weight:800;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+.os-l{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin-top:2px}
+/* counter-offer alert (top of orders) */
+.ord-alert{align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 16px;padding:15px 18px;background:linear-gradient(90deg,var(--goldWash),#FFFDF6);border:1px solid #F1DFA6;border-radius:16px}
+.oa-l{flex:1;min-width:260px;font-size:14px;line-height:1.5;color:var(--ink)}
+.oa-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy2);background:var(--gold);border-radius:999px;padding:3px 10px;margin-right:8px}
+.oa-id{font-size:12px;color:var(--ink2);font-weight:600}
+.oa-exp{display:block;margin-top:4px;font-size:13px;color:var(--goldDeep);font-weight:800}
+.oa-exp b{font-variant-numeric:tabular-nums}
+.oa-r{display:flex;gap:8px;flex-shrink:0}
 .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--goldWash)}
 
 .stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px 24px 56px}
@@ -77,8 +156,8 @@ input,select{font-family:inherit}
 .hint .h:hover{border-color:var(--navy);background:var(--goldWash)}
 
 /* order details */
-.order{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
-.ofoot{display:none;padding:14px 20px;border-top:1px solid var(--line);background:#FBF8F1}
+.order{margin-top:13px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.ofoot{display:none;padding:11px 20px;border-top:1px solid var(--line);background:#FBF8F1}
 .ofoot.on{display:block}
 .ofoot-need{font-size:12.5px;color:var(--ink2);margin-bottom:10px;line-height:1.4}
 .ofoot-need b{color:var(--goldDeep);font-weight:800}
@@ -89,25 +168,24 @@ input,select{font-family:inherit}
 #o-shoe.v-text{color:var(--ink2);font-weight:700}
 #row-shipdeliver{display:none}
 /* post-search the card collapses to a one-line summary; the chevron expands the editable card */
-.osum{display:none;align-items:center;justify-content:space-between;gap:12px;padding:15px 20px;cursor:pointer;transition:background .15s}
+/* order summary sits at the top of the live-prices card; the chevron opens the editable card */
+.osum{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--line);transition:background .15s}
 .osum:hover{background:var(--paper)}
 .osum-txt{font-size:15px;font-weight:700;color:var(--navy);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .osum-chev{flex-shrink:0;color:var(--ink2);font-size:13px;transition:transform .2s}
-#order.collapsed .osum{display:flex}
-#order.collapsed > .order-hd{display:none}
-#order.collapsed .row{display:none}
-#order.collapsed .ofoot{display:none}
-#order.collapsed.expanded .osum{border-bottom:1px solid var(--line)}
-#order.collapsed.expanded .osum-chev{transform:rotate(180deg)}
-#order.collapsed.expanded .row{display:flex}
-.order-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--line)}
+.osum.open .osum-chev{transform:rotate(180deg)}
+#order.collapsed{display:none}
+#order.collapsed.expanded{display:block}
+.order-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--line)}
 .order-hd .ttl{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
 .order-hd .prog{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--goldDeep);font-variant-numeric:tabular-nums}
-.row{display:flex;align-items:flex-start;gap:14px;padding:15px 20px;border-bottom:1px solid var(--line);min-height:58px}
+.row{display:flex;align-items:flex-start;gap:12px;padding:9px 20px;border-bottom:1px solid var(--line);min-height:0}
 .row:last-of-type{border-bottom:0}
-.row .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#DAD3C3;margin-top:6px;transition:.2s}
-.row.set .dot{background:var(--gold);box-shadow:0 0 0 4px var(--goldWash)}
-.row .k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);width:88px;flex-shrink:0;padding-top:4px}
+/* completion indicator: light-grey ring = still needed, green check = done */
+.row .dot{width:17px;height:17px;border-radius:50%;flex-shrink:0;background:#fff;border:2px solid #E0DAC9;margin-top:1px;position:relative;transition:.2s}
+.row.set .dot{background:var(--green);border-color:var(--green)}
+.row.set .dot::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.row .k{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);width:96px;flex-shrink:0;padding-top:2px}
 .row .body{flex:1;min-width:0}
 .v-pending{font-size:15px;font-weight:600;font-style:italic;color:#B9B2A2;padding-top:3px}
 button.v-pending{border:0;background:none;font-family:inherit;cursor:pointer;text-align:left;display:inline-block;transition:color .15s}
@@ -130,6 +208,8 @@ button.v-text:hover{color:var(--goldDeep)}
 .cswatch.on{border-color:var(--gold);background:var(--goldWash);color:var(--goldDeep)}
 .cswatch .chip{width:16px;height:16px;border-radius:5px;border:1px solid rgba(16,36,59,.12)}
 .cswatch .tick{font-weight:800}
+.cswatch .gage{font-size:11px;font-weight:600;color:var(--ink2);opacity:.85}
+.cswatch.on .gage{color:var(--goldDeep)}
 
 /* shoe row: name left, generation pills right */
 .shoeline{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
@@ -364,24 +444,28 @@ button.v-text:hover{color:var(--goldDeep)}
 #waitsave .co-card{max-width:524px}
 .nyp-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
 .nyp-cap{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
-.nyp-unit{display:inline-flex;background:var(--paper);border:1px solid var(--line);border-radius:var(--rpill);padding:3px}
-.nyp-unit button{font-size:12px;font-weight:700;color:var(--ink2);padding:5px 11px;border-radius:var(--rpill);transition:.15s;white-space:nowrap}
-.nyp-unit button.on{background:var(--navy);color:#fff}
 .nyp-big{font-size:42px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.05;margin:2px 0 6px}
 .nyp-big .u{font-size:18px;font-weight:700;color:var(--ink2);margin-left:6px}
 .nyp-fine{font-size:12px;color:var(--ink2);line-height:1.5;margin:0 0 16px}
 .nyp-fine b{color:var(--ink);font-weight:700}
-.nyp-slider{margin:0 0 8px}
-.nyp-slider input[type=range]{width:100%;accent-color:var(--gold);height:22px;cursor:pointer}
+.nyp-slider{margin:2px 0 8px}
+.nyp-slider input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;cursor:pointer}
+.nyp-slider input[type=range]::-webkit-slider-runnable-track{height:12px;border-radius:999px;background:linear-gradient(90deg,#C0392B 0%,#E8B500 50%,#1E7A4D 100%)}
+.nyp-slider input[type=range]::-moz-range-track{height:12px;border-radius:999px;background:linear-gradient(90deg,#C0392B 0%,#E8B500 50%,#1E7A4D 100%)}
+.nyp-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:30px;height:30px;margin-top:-9px;border-radius:50%;background:#fff;border:3px solid var(--navy);box-shadow:0 2px 8px rgba(16,36,59,.3);cursor:grab}
+.nyp-slider input[type=range]:active::-webkit-slider-thumb{cursor:grabbing}
+.nyp-slider input[type=range]::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--navy);box-shadow:0 2px 8px rgba(16,36,59,.3);cursor:grab}
+.nyp-pct{font-size:13px;font-weight:800;color:var(--goldDeep);background:var(--goldWash);border:1px solid #F1DFA6;border-radius:999px;padding:5px 12px;font-variant-numeric:tabular-nums}
 .nyp-scale{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--ink2);margin-top:-2px}
 .nyp-scale .nyp-today{color:var(--ink)}
 .nyp-advice{min-height:17px;font-size:12.5px;line-height:1.45;color:var(--goldDeep);font-weight:600;margin:0 0 16px}
 .nyp-advice:empty{margin:0 0 8px}
 .nyp-table{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0 0 4px}
-.nyp-colhd{display:grid;grid-template-columns:1fr 60px 60px 72px;align-items:center;gap:6px;padding:8px 12px;background:var(--paper);border-bottom:1px solid var(--line)}
+.nyp-colhd{display:grid;grid-template-columns:1fr 58px 58px 30px;align-items:center;gap:8px;padding:8px 12px;background:var(--paper);border-bottom:1px solid var(--line)}
 .nyp-colhd span{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);text-align:right}
 .nyp-colhd span:first-child{text-align:left}
-.nyp-r{display:grid;grid-template-columns:1fr 60px 60px 72px;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid var(--line);font-size:13px}
+.nyp-r{display:grid;grid-template-columns:1fr 58px 58px 30px;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--line);font-size:13px}
+.nyp-r > .nyp-ck{justify-self:end}
 .nyp-r:first-child{border-top:0}
 .nyp-lbl{display:flex;align-items:center;gap:7px;min-width:0;text-align:left;font-weight:600;color:var(--ink)}
 .nyp-lbl.tap{cursor:pointer}
@@ -458,11 +542,139 @@ button.v-text:hover{color:var(--goldDeep)}
 .srch{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--navy)}
 .srch .pulse{width:8px;height:8px}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style id="copage-css">
+#copage{--ink:#30313d; --ink2:#6a7383; --ink3:#8792a2;
+    --line:#e6e6eb; --line2:#d9dce3; --field:#ffffff;
+    --bg:#ffffff; --bg-soft:#f7f8fa;
+    --coral:#3c4257; --coral-hover:#4a5163; --coral-press:#2d323f;
+    --coral-wash:#f7f8fa; --coral-line:#e6e6eb;
+    --radius:8px;
+    --sys:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif;}
+#copage *{box-sizing:border-box}
+#copage{margin:0;padding:0}
+#copage{font-family:var(--sys); color:var(--ink); background:var(--bg);
+    -webkit-font-smoothing:antialiased; font-size:15px; line-height:1.5;}
+#copage .topbar{height:3px;background:linear-gradient(90deg,#00d4ff 0%,#5433ff 100%);width:100%}
+#copage .wrap{max-width:520px;margin:0 auto;min-height:calc(100vh - 3px)}
+#copage #step2{display:none}
+#copage .continue-btn{width:100%;margin-top:20px}
+#copage .backrev{display:inline-flex;align-items:center;gap:6px;background:none;border:0;font:inherit;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;padding:0;margin-bottom:22px}
+#copage .backrev:hover{color:var(--ink)}
+#copage .left{padding:28px 20px 34px;display:flex;flex-direction:column}
+#copage .left-inner{max-width:100%;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
+#copage .merch{display:flex;align-items:center;gap:10px;margin-bottom:38px}
+#copage .back{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:var(--ink2);text-decoration:none;font-size:17px;line-height:1;margin-right:2px;transition:.15s}
+#copage .back:hover{background:var(--bg-soft);color:var(--ink)}
+#copage .merch-name{font-family:var(--sys);font-weight:600;font-size:15px;color:var(--ink);letter-spacing:-.005em}
+#copage .test{font-size:11px;font-weight:700;letter-spacing:.04em;color:#9a6b00;background:#ffe9b3;border-radius:5px;padding:3px 7px;text-transform:uppercase;margin-left:2px}
+#copage .pay-eyebrow{font-size:15px;color:var(--ink2);margin:0 0 6px}
+#copage .amount{font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--ink);font-family:'Jost',var(--sys);line-height:1.1;display:flex;align-items:baseline;gap:9px}
+#copage .amount .cur{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:.02em}
+#copage .hold-tag{display:inline-flex;align-items:center;gap:7px;margin-top:11px;font-size:12.5px;font-weight:600;color:var(--coral-press);background:var(--coral-wash);border:1px solid var(--coral-line);border-radius:999px;padding:5px 11px}
+#copage .hold-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3)}
+#copage .item{display:flex;align-items:flex-start;gap:14px;padding:26px 0 22px;margin-top:26px;border-top:1px solid var(--line)}
+#copage .thumb{width:46px;height:46px;border-radius:8px;background:#f1f1f4;border:1px solid var(--line);flex-shrink:0;display:grid;place-items:center;overflow:hidden}
+#copage .item-t{flex:1;min-width:0}
+#copage .item-t .nm{font-weight:600;font-size:14.5px;color:var(--ink);display:flex;align-items:center;gap:8px}
+#copage .item-t .sub{font-size:13px;color:var(--ink3);margin-top:2px}
+#copage .item-price{font-weight:600;font-size:14px;color:var(--ink);white-space:nowrap}
+#copage .item-price small{display:block;font-weight:500;font-size:11px;color:var(--ink3);text-align:right;margin-top:2px}
+#copage .mandate{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:24px}
+#copage .mandate-hd{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--bg-soft);border-bottom:1px solid var(--line)}
+#copage .mandate-hd .dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
+#copage .mandate-hd .lbl{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+#copage .mandate-hd .sig{margin-left:auto;font-size:10.5px;font-weight:600;letter-spacing:.04em;color:var(--ink3);font-family:'Jost',var(--sys)}
+#copage .m-row{display:flex;justify-content:space-between;gap:16px;padding:9px 14px;font-size:13px;border-top:1px solid #f0f0f3}
+#copage .m-row:first-child{border-top:0}
+#copage .m-row .k{color:var(--ink3)}
+#copage .m-row .v{color:var(--ink);font-weight:600;text-align:right}
+#copage .m-row .v .mdl{display:inline-block;font-size:11px;font-weight:700;color:var(--ink2);background:#eef0f3;border-radius:5px;padding:2px 6px;margin-left:4px}
+#copage .sum{border-top:1px solid var(--line);padding-top:16px;margin-bottom:18px}
+#copage .sum-row{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+#copage .sum-row .v{color:var(--ink)}
+#copage .sum-row.tot{font-weight:700;color:var(--ink);font-size:15px;padding-top:11px;border-top:1px solid var(--line);margin-top:3px}
+#copage .sum-row.muted .v{color:var(--ink3);font-weight:500}
+#copage .how{background:var(--bg-soft);border-radius:10px;padding:15px 16px;margin-bottom:auto}
+#copage .how h4{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2)}
+#copage .how ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+#copage .how li{display:flex;gap:9px;font-size:12.5px;line-height:1.45;color:var(--ink2)}
+#copage .how li .n{flex-shrink:0;width:17px;height:17px;border-radius:50%;background:#fff;border:1px solid var(--line2);color:var(--ink2);font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+#copage .how li b{color:var(--ink);font-weight:600}
+#copage .foot{display:flex;align-items:center;gap:14px;padding-top:26px;margin-top:26px;font-size:12px;color:var(--ink3)}
+#copage .foot .stripe{display:flex;align-items:center;gap:5px}
+#copage .foot .stripe b{font-weight:700;color:var(--ink2);font-family:var(--sys)}
+#copage .foot a{color:var(--ink3);text-decoration:none}
+#copage .foot a:hover{color:var(--ink2)}
+#copage .foot .sep{color:var(--line2)}
+#copage .right{padding:28px 20px 34px;display:flex;flex-direction:column}
+#copage .right-inner{max-width:100%;width:100%;margin:0 auto}
+#copage .applepay{width:100%;height:44px;border:0;border-radius:7px;background:#000;color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-family:var(--sys)}
+#copage .applepay:hover{background:#1a1a1a}
+#copage .applepay .logo{font-size:17px;margin-right:1px}
+#copage .ordiv{display:flex;align-items:center;gap:12px;color:var(--ink3);font-size:12.5px;margin:18px 0 20px}
+#copage .ordiv::before, #copage .ordiv::after{content:"";height:1px;background:var(--line);flex:1}
+#copage .sec-label{font-size:14px;font-weight:600;color:var(--ink);margin:0 0 9px}
+#copage .field-group{margin-bottom:18px}
+#copage .lbl{display:block;font-size:12.5px;color:var(--ink2);margin:0 0 6px}
+#copage .inp{width:100%;height:42px;border:1px solid var(--line2);border-radius:7px;padding:0 12px;font-size:14.5px;font-family:var(--sys);color:var(--ink);background:var(--field);transition:.12s;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+#copage .inp::placeholder{color:#b3b9c4}
+#copage .inp:focus{outline:none;border-color:#a3b0d4;box-shadow:0 0 0 3px rgba(60,66,87,.12)}
+#copage .with-icon{position:relative}
+#copage .with-icon .ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#c2c8d2;pointer-events:none}
+#copage .stack{border:1px solid var(--line2);border-radius:7px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+#copage .stack .inp{border:0;border-radius:0;box-shadow:none}
+#copage .stack .inp:focus{box-shadow:none;border:0;background:#fff}
+#copage .stack .row{display:flex}
+#copage .stack .row + .row{border-top:1px solid var(--line2)}
+#copage .stack .row .inp + .inp{border-left:1px solid var(--line2)}
+#copage .stack .row.focused{box-shadow:0 0 0 3px rgba(60,66,87,.12);position:relative;z-index:2;border-radius:7px}
+#copage .cardnum{position:relative}
+#copage .cardnum .brands{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;gap:4px}
+#copage .brand{height:16px;width:24px;border-radius:3px;display:grid;place-items:center;font-size:7.5px;font-weight:800;color:#fff;letter-spacing:.02em}
+#copage .select-wrap{position:relative}
+#copage .select-wrap select{width:100%;height:42px;border:1px solid var(--line2);border-radius:7px;padding:0 12px;font-size:14.5px;font-family:var(--sys);color:var(--ink);background:var(--field);appearance:none;cursor:pointer;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+#copage .select-wrap select:focus{outline:none;border-color:#a3b0d4;box-shadow:0 0 0 3px rgba(60,66,87,.12)}
+#copage .select-wrap .chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;font-size:11px}
+#copage .addr-stack{border:1px solid var(--line2);border-radius:7px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.02)}
+#copage .addr-stack .inp, #copage .addr-stack select{border:0;border-radius:0;box-shadow:none;width:100%}
+#copage .addr-stack > * + *{border-top:1px solid var(--line2)}
+#copage .addr-stack .select-wrap select{border:0}
+#copage .manual{display:inline-block;margin-top:9px;font-size:12.5px;color:var(--coral-press);text-decoration:none;font-weight:500}
+#copage .manual:hover{text-decoration:underline}
+#copage .check{display:flex;align-items:center;gap:9px;margin:14px 0 0;cursor:pointer;font-size:13.5px;color:var(--ink)}
+#copage .check input{position:absolute;opacity:0;width:0;height:0}
+#copage .check .box{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--line2);flex-shrink:0;display:grid;place-items:center;transition:.12s}
+#copage .check input:checked + .box{background:var(--coral);border-color:var(--coral)}
+#copage .check .box svg{opacity:0;transition:.12s}
+#copage .check input:checked + .box svg{opacity:1}
+#copage .auth-note{margin-top:24px;border:1px solid var(--coral-line);background:var(--coral-wash);border-radius:9px;padding:14px 15px}
+#copage .auth-note .h{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--coral-press);margin-bottom:7px}
+#copage .auth-note .h .dot{width:6px;height:6px;border-radius:50%;background:var(--coral)}
+#copage .auth-note p{margin:0;font-size:12.5px;line-height:1.55;color:var(--ink2)}
+#copage .auth-note p + p{margin-top:7px}
+#copage .auth-note b{color:var(--coral-press);font-weight:700}
+#copage .pay-btn{width:100%;height:46px;margin-top:20px;border:0;border-radius:8px;background:var(--coral);color:#fff;font-size:15.5px;font-weight:700;font-family:var(--sys);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.14s;letter-spacing:.01em}
+#copage .pay-btn:hover{background:var(--coral-hover)}
+#copage .pay-btn:active{background:var(--coral-press);transform:translateY(1px)}
+#copage .pay-btn .lock{font-size:13px;opacity:.9}
+#copage .pay-fine{margin:13px 2px 0;font-size:11.5px;line-height:1.5;color:var(--ink3);text-align:center}
+#copage .pay-fine a{color:var(--ink3);text-decoration:underline}
+#copage .done-veil{position:fixed;inset:0;background:rgba(255,255,255,.96);display:none;place-items:center;z-index:50;padding:24px}
+#copage .done-veil.on{display:grid}
+#copage .done-card{max-width:380px;text-align:center}
+#copage .done-ring{width:58px;height:58px;border-radius:50%;background:var(--coral-wash);border:1.5px solid var(--coral-line);display:grid;place-items:center;margin:0 auto 18px}
+#copage .done-card h2{font-family:'Jost',var(--sys);font-weight:600;font-size:21px;color:var(--ink);margin:0 0 9px;letter-spacing:-.01em}
+#copage .done-card p{font-size:14px;color:var(--ink2);line-height:1.55;margin:0 0 6px}
+#copage .done-card .amt{font-weight:700;color:var(--ink)}
+#copage .done-card .reset{margin-top:20px;background:none;border:0;color:var(--coral-press);font-size:13px;font-weight:600;cursor:pointer}
+#copage{position:fixed;inset:0;z-index:300;overflow-y:auto}
+</style>
 </head>
 <body>
 
 
-<div class="top"><div class="logo"><span class="dot"></span>Pacer</div></div>
+<div class="top"><div class="logo"><span class="dot"></span>Pacer</div><nav class="topnav"><a class="navlink" href="#faq">FAQ</a><a class="navlink signin" href="#" onclick="showOrders();return false">Sign In</a></nav></div>
 
 <div class="stage">
   <div class="col">
@@ -483,17 +695,51 @@ button.v-text:hover{color:var(--goldDeep)}
     <div class="order" id="order">
       <div class="order-hd"><span class="ttl">Order details</span><span class="prog" id="prog">0 of 5</span></div>
       <div class="row" id="row-shoe"><span class="dot"></span><span class="k">Shoe</span><div class="body"><div class="v-pending" id="o-shoe">—</div></div></div>
+      <div class="row" id="row-gens"><span class="dot"></span><span class="k">Model years</span><div class="body"><div class="v-pending" id="o-gens">—</div></div></div>
       <div class="row" id="row-size"><span class="dot"></span><span class="k">Size</span><div class="body"><div class="v-pending" id="o-size">—</div></div></div>
       <div class="row" id="row-colors"><span class="dot"></span><span class="k">Colors</span><div class="body"><div class="v-pending" id="o-colors">—</div></div></div>
       <div class="row" id="row-zip"><span class="dot"></span><span class="k">Ship to</span><div class="body"><div class="v-pending" id="o-zip">—</div></div></div>
       <div class="row" id="row-deliver"><span class="dot"></span><span class="k">Deliver by</span><div class="body"><div class="v-pending" id="o-deliver">—</div></div></div>
-      <div class="osum" id="osum" onclick="toggleOrderExpand()"><div class="osum-txt" id="osum-main">—</div><span class="osum-chev">⌄</span></div>
       <div class="ofoot" id="ofoot"></div>
     </div>
 
     <div class="results" id="results">
       <div class="results-hd"><span class="ttl">Live prices</span><span class="scan" id="scan"></span></div>
       <div class="vlist" id="vlist"></div>
+    </div>
+  </div>
+</div>
+
+<!-- home FAQ -->
+<section class="faqsec" id="faq">
+  <h2 class="faqh">Built for runners who know their shoe.</h2>
+  <p class="faqintro">Pacer is for the runner who already knows the model and size they reorder a few times a year; no fit gamble, you just refuse to pay retail for a shoe you trust. Here's how Pacer gets you the best price.</p>
+  <div class="faqlead" id="faqLead"></div>
+</section>
+
+<!-- orders page (sign-in view) -->
+<div id="orderspage" style="display:none">
+  <div class="ord-topbar">
+    <div class="logo"><span class="dot"></span>Pacer</div>
+    <button class="ord-back" onclick="closeOrders()">← Back to search</button>
+  </div>
+  <div class="ord-wrap">
+    <div class="ord-head">
+      <span class="ord-title">Your orders</span>
+      <div class="ord-tabs" id="ordTabs">
+        <button class="on" onclick="ordSetFilter('all',this)">All</button>
+        <button onclick="ordSetFilter('open',this)">Open</button>
+        <button onclick="ordSetFilter('filled',this)">Filled</button>
+        <button onclick="ordSetFilter('cxl',this)">Canceled &amp; expired</button>
+      </div>
+    </div>
+    <div class="ord-stats" id="ordStats"></div>
+    <div class="ord-alert" id="ordAlert" style="display:none"></div>
+    <div class="ord-card">
+      <div class="ord-scroll">
+        <div class="ord-colhd"><span>Order #</span><span>Item</span><span>My price</span><span>Fill by</span><span>Deliver by</span><span>Status</span><span>Action</span></div>
+        <div id="ordRows"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -507,10 +753,7 @@ button.v-text:hover{color:var(--goldDeep)}
     <div id="ws-name">
       <div class="nyp-top">
         <span class="nyp-cap">Your price</span>
-        <div class="nyp-unit" id="nyp-unit">
-          <button class="on" data-u="usd" onclick="nypUnit('usd')">All-in $</button>
-          <button data-u="pct" onclick="nypUnit('pct')">% off MSRP</button>
-        </div>
+        <span class="nyp-pct" id="nyp-pct">— off MSRP</span>
       </div>
       <div class="nyp-big" id="nyp-big">—</div>
       <p class="nyp-fine">Includes taxes &amp; shipping to <b id="nyp-zip">—</b> · by <b id="nyp-date">—</b></p>
@@ -521,7 +764,7 @@ button.v-text:hover{color:var(--goldDeep)}
       <p class="nyp-advice" id="nyp-advice"></p>
 
       <div class="nyp-adv" id="nyp-adv">
-        <button class="nyp-adv-btn" onclick="document.getElementById('nyp-adv').classList.toggle('open')">Advanced — price each SKU<span class="chev">⌄</span></button>
+        <button class="nyp-adv-btn" onclick="document.getElementById('nyp-adv').classList.toggle('open')">Advanced; price each SKU<span class="chev">⌄</span></button>
         <div class="nyp-adv-body"><div class="nyp-table" id="nyp-table"></div></div>
       </div>
 
@@ -541,10 +784,10 @@ button.v-text:hover{color:var(--goldDeep)}
         <div class="ws-drow price"><span class="k">Your price</span><span class="v" id="ws-d-price">—</span></div>
       </div>
 
-      <button class="co-pay" onclick="goCheckout()">Continue to checkout →</button>
+      <button class="co-pay" onclick="goCheckout()">Continue</button>
     </div>
 
-    <p class="co-fine" id="ws-fine">Next you'll authorize a hold for your price. Your card is charged only if Pacer secures the pair at or below it by your date — otherwise the hold is released in full.</p>
+    <p class="co-fine" id="ws-fine">Next you'll authorize a hold for your price. Your card is charged only if Pacer secures the pair at or below it by your date. Otherwise the hold is released in full.</p>
   </div>
 </div>
 
@@ -607,6 +850,7 @@ function closeField(f){ editing.delete(f); render(); }
 
 /* ---- date helpers ---- */
 function addMonths(n){ const d=new Date(); d.setMonth(d.getMonth()+n); return d; }
+function defaultDeliver(){ return new Date(Date.now()+21*864e5); }   // deliver-by defaults to 3 weeks out
 function toISO(d){ return d.toISOString().slice(0,10); }
 function fmtDate(d){ return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}); }
 function daysFromNow(d){ return Math.round((d - new Date().setHours(0,0,0,0))/864e5); }
@@ -799,8 +1043,9 @@ function renderPrices(){
   LOWSKU=oSku;
   var msrp=S.shoe.msrp||(S.shoe.base+40);
   var save=Math.max(0, msrp-overall);
-  // default view: one retail-anchored summary card
+  // default view: order summary header (editable via chevron) + retail-anchored price card
   list.innerHTML=
+    '<div class="osum" onclick="toggleOrderExpand()"><div class="osum-txt" id="osum-main">—</div><span class="osum-chev">⌄</span></div>'+
     '<div class="sumcard">'+
       '<div class="sum-meta">'+oMeta+'</div>'+
       '<div class="sum-pricewrap">'+
@@ -808,8 +1053,8 @@ function renderPrices(){
         '<span class="sum-low">$'+overall+'<span class="sum-allin">all-in</span></span>'+
         (save>0?'<span class="sum-save">Lowest today · save $'+save+'</span>':'')+
       '</div>'+
-      '<button class="sum-nyp" onclick="nameYourPriceTop()">Name your price — beat $'+overall+' →</button>'+
-      '<a class="sum-buy" href="'+affLink(oSku.v)+'" target="_blank" rel="noopener">Buy now at retail — $'+overall+' at '+oSku.v+' ↗</a>'+
+      '<button class="sum-nyp" onclick="nameYourPriceTop()">Name your price. Beat $'+overall+' →</button>'+
+      '<a class="sum-buy" href="'+affLink(oSku.v)+'" target="_blank" rel="noopener">No, I\'ll pay retail. $'+overall+' at '+oSku.v+' ↗</a>'+
       '<div class="seeall">'+
         '<button class="seeall-btn" onclick="this.parentNode.classList.toggle(\'open\')">See all sellers &amp; colors<span class="chev">⌄</span></button>'+
         '<div class="seeall-body">'+modelsHtml+'</div>'+
@@ -837,19 +1082,16 @@ function wsMy(gen,color){
 }
 function nypBigText(){
   var my=wsMy(WS.headGen,WS.headColor);
-  if(WS.unit==="pct"){ var pct=Math.max(0,Math.round((1-my/wsMsrp())*100)); return pct+'<span class="u">% off MSRP</span>'; }
   return "$"+my+'<span class="u">all-in</span>';
 }
 function nypAdvice(){
   var f=WS.frac, allGens=WS.gens.length>=WS.shoe.gens.length;
   if(f>=0.93) return "";
-  if(f>=0.86) return "Pacer can usually hit this within a few days.";
-  if(f>=0.80) return "Going lower — give me a longer negotiation window so I have time to work it.";
-  return "Aggressive target — the lower you go and the shorter the window, the less likely it fills. Give me more time to improve the odds.";
+  if(f>=0.86) return "Pacer can usually hit this within the 5-day window.";
+  if(f>=0.80) return "Going lower. Pacer will work all 5 days to land it.";
+  return "Aggressive target; the lower you go, the less likely it fills within the 5-day window.";
 }
 function nypNum(v,cls){ return '<span class="nyp-num '+cls+'">$'+v+'</span>'; }
-/* per-SKU price is read-only (set once by the slider) — you can still deselect SKUs via the checkbox */
-function nypMyCell(scope,val){ return '<span class="nyp-my">$'+val+'</span>'; }
 function genIncluded(g){ return !WS.exGen[g] && WS.colors.some(function(c){ return !WS.exSku[g+"|"+c]; }); }
 function skuIncluded(g,c){ return !WS.exGen[g] && !WS.exSku[g+"|"+c]; }
 function nypIncludedSkus(){ var out=[]; WS.gens.forEach(function(g){ if(WS.exGen[g])return; WS.colors.forEach(function(c){ if(!WS.exSku[g+"|"+c]) out.push([g,c]); }); }); return out; }
@@ -868,41 +1110,37 @@ function nypCkToggle(kind,key){
   else if(kind==="sku"){ if(WS.exSku[key]){ delete WS.exSku[key]; } else { WS.exSku[key]=true; } }
   nypRender();
 }
-function nypColhd(){ return '<div class="nyp-colhd"><span>Item</span><span>Retail</span><span>Today</span><span>Your price</span></div>'; }
+function nypColhd(){ return '<div class="nyp-colhd"><span>Item</span><span>Retail</span><span>Today</span><span></span></div>'; }
 function nypPrimaryRow(){
-  var t=wsToday(WS.headGen,WS.headColor), my=wsMy(WS.headGen,WS.headColor);
+  var t=wsToday(WS.headGen,WS.headColor);
   var incGens=WS.gens.filter(genIncluded), anyOn=incGens.length>0, nSku=nypIncludedSkus().length;
   return '<div class="nyp-r'+(WS.open?" open":"")+(anyOn?"":" off")+'">'+
     '<span class="nyp-lbl">'+
-      nypCk("all","",anyOn)+
       '<span class="nyp-chev" onclick="nypTogglePrimary()">⌄</span>'+
       '<span class="nyp-txt" onclick="nypTogglePrimary()">'+WS.shoe.brand+" "+WS.shoe.name+'<span class="sub"> · '+(incGens.length?incGens.join("/"):"none")+" · "+nSku+' SKU'+(nSku===1?"":"s")+'</span></span>'+
     '</span>'+
-    nypNum(wsMsrp(),"nyp-msrp")+nypNum(t,"nyp-today2")+nypMyCell("global",my)+
+    nypNum(wsMsrp(),"nyp-msrp")+nypNum(t,"nyp-today2")+nypCk("all","",anyOn)+
   '</div>';
 }
 function nypGenRow(g){
   var on=genIncluded(g);
   var gt=Math.min.apply(null, WS.colors.map(function(c){return wsToday(g,c);}));
-  var gmy=(WS.ov[g]!=null)?WS.ov[g]:Math.round(gt*WS.frac);
   return '<div class="nyp-r nyp-lvl1'+(WS.openGen[g]?" open":"")+(on?"":" off")+'">'+
     '<span class="nyp-lbl">'+
-      nypCk("gen",g,on)+
       '<span class="nyp-chev" onclick="nypToggleGen(\''+g+'\')">⌄</span>'+
       '<span class="nyp-txt" onclick="nypToggleGen(\''+g+'\')">'+WS.shoe.name+" "+g+'</span>'+
     '</span>'+
-    nypNum(wsMsrp(),"nyp-msrp")+nypNum(gt,"nyp-today2")+nypMyCell(g,gmy)+
+    nypNum(wsMsrp(),"nyp-msrp")+nypNum(gt,"nyp-today2")+nypCk("gen",g,on)+
   '</div>';
 }
 function nypColorRow(g,c){
-  var on=skuIncluded(g,c), co=colorObj(c), ct=wsToday(g,c), cmy=wsMy(g,c);
+  var on=skuIncluded(g,c), co=colorObj(c), ct=wsToday(g,c);
   return '<div class="nyp-r nyp-lvl2'+(on?"":" off")+'">'+
     '<span class="nyp-lbl">'+
-      nypCk("sku",g+"|"+c,on)+
       '<span class="nyp-sw" style="background:'+co.c+'"></span>'+
       '<span class="nyp-txt">'+c+'</span>'+
     '</span>'+
-    nypNum(wsMsrp(),"nyp-msrp")+nypNum(ct,"nyp-today2")+nypMyCell(g+"|"+c,cmy)+
+    nypNum(wsMsrp(),"nyp-msrp")+nypNum(ct,"nyp-today2")+nypCk("sku",g+"|"+c,on)+
   '</div>';
 }
 function nypRender(){
@@ -911,6 +1149,8 @@ function nypRender(){
   document.getElementById("nyp-today").textContent="Today $"+today;
   document.getElementById("nyp-floor").textContent="Floor $"+floor;
   document.getElementById("nyp-big").innerHTML=nypBigText();
+  var my=wsMy(WS.headGen,WS.headColor), pct=Math.max(0,Math.round((1-my/wsMsrp())*100));
+  var pe=document.getElementById("nyp-pct"); if(pe) pe.textContent=pct+"% off MSRP";
   document.getElementById("nyp-advice").textContent=nypAdvice();
   var rows=[nypColhd(), nypPrimaryRow()];
   if(WS.open){
@@ -923,7 +1163,6 @@ function nypRender(){
 }
 function nypTogglePrimary(){ WS.open=!WS.open; nypRender(); }
 function nypToggleGen(g){ WS.openGen[g]=!WS.openGen[g]; nypRender(); }
-function nypUnit(u){ WS.unit=u; [].slice.call(document.querySelectorAll("#nyp-unit button")).forEach(function(b){ b.classList.toggle("on", b.dataset.u===u); }); nypRender(); }
 function nypSlide(val){ WS.frac=WS.floorFrac+(val/100)*(1-WS.floorFrac); WS.ov={}; nypRender(); }
 function openWaitSave(btn){
   WS={shoe:S.shoe, gens:S.gens.slice().sort(function(a,b){return S.shoe.gens.indexOf(a)-S.shoe.gens.indexOf(b);}), colors:pickedColors(), unit:"usd", frac:1, floorFrac:0.75, ov:{}, open:false, openGen:{}, exGen:{}, exSku:{}};
@@ -931,9 +1170,9 @@ function openWaitSave(btn){
   WS.headGen=best.g; WS.headColor=best.c;
   document.getElementById("nyp-zip").textContent=S.zip||"—";
   document.getElementById("nyp-date").textContent=S.deliver?fmtDate(S.deliver):"—";
-  var fine=document.getElementById("ws-fine"); if(fine) fine.innerHTML='Next you’ll authorize a hold for your price. Your card is charged only if Pacer secures the pair at or below it by <b>'+((S.negUntil||S.deliver)?fmtDate(S.negUntil||S.deliver):"your date")+'</b> — otherwise the hold is released in full.';
+  var fine=document.getElementById("ws-fine"); if(fine) fine.innerHTML='Next you’ll authorize a hold for your price. Your card is charged only if Pacer secures the pair at or below it by <b>'+((S.negUntil||S.deliver)?fmtDate(S.negUntil||S.deliver):"your date")+'</b>. Otherwise the hold is released in full.';
   document.getElementById("nyp-range").value=100;
-  nypUnit("usd");
+  WS.unit="usd";
   wsReset(); nypRender();
   document.getElementById("waitsave").classList.add("on");
   document.body.style.overflow="hidden";
@@ -971,20 +1210,22 @@ function wsSubmitPrice(){
 /* hand off to the Stripe authorization-hold page with the real order */
 function goCheckout(){
   var my=wsMy(WS.headGen,WS.headColor);
-  var p=new URLSearchParams({
-    price:String(my),
-    shoe:shoeLabel(),
-    color:wsOrderColors(),
-    size:S.size||"",
-    gender:S.gender||"Men's",
-    models:(WS.gens||S.gens||[]).join("/"),
-    zip:S.zip||"",
-    by:S.deliver?toISO(S.deliver):"",
-    neguntil:toISO(S.negUntil||S.deliver||addMonths(1))
-  });
-  var url="TrustPixel_Checkout__standalone_.html?"+p.toString();
-  try{ (window.top||window).location.href=url; }catch(e){ window.location.href=url; }
+  window.PACER_ORDER={
+    price:String(my), shoe:shoeLabel(), color:wsOrderColors(), size:S.size||"",
+    gender:S.gender||"Men's", models:(WS.gens||S.gens||[]).join("/"),
+    zip:S.zip||"", by:S.deliver?toISO(S.deliver):"",
+    neguntil:toISO(S.negUntil||S.deliver||defaultDeliver())
+  };
+  if(typeof closeWait==="function") closeWait();        // close the Name-Your-Price modal
+  if(typeof coReset==="function") coReset();            // restore pristine checkout template
+  if(typeof coPopulate==="function") coPopulate();      // fill the checkout from the order
+  if(typeof goStep==="function") goStep(1);             // start on the review step
+  var dv=document.getElementById("done"); if(dv) dv.classList.remove("on");
+  document.getElementById("copage").style.display="block";
+  document.body.style.overflow="hidden";
+  window.scrollTo(0,0);
 }
+function pacerCloseCheckout(){ var c=document.getElementById("copage"); if(c) c.style.display="none"; document.body.style.overflow=""; }
 
 /* ---- results CTAs ---- */
 function buyNowLowest(){
@@ -992,7 +1233,13 @@ function buyNowLowest(){
   rows.map(r=>({r, p:parseInt((r.querySelector(".vprice").textContent.match(/\d+/)||[0])[0])}))
     .sort((a,b)=>a.p-b.p).slice(0,3).forEach(o=>o.r.classList.add("open"));
 }
-function nameYourPriceTop(){ if(LOWSKU) openWaitSave({dataset:LOWSKU}); }
+function nameYourPriceTop(){
+  if(!LOWSKU) return;
+  // fix the 5-day negotiation window (capped at deliver-by)
+  var nu=new Date(Date.now()+5*864e5); if(S.deliver && nu>S.deliver) nu=new Date(S.deliver);
+  S.negUntil=nu; updateOrder();
+  openWaitSave({dataset:LOWSKU});
+}
 
 /* ---- conversational flow ---- */
 var CV={step:null, done:{}, lastPrompt:{}};
@@ -1031,23 +1278,30 @@ function setPlaceholder(p){ document.getElementById("cin").placeholder=p; CV.las
 
 /* ===== In-chat FAQ (scripted) — answers common questions without breaking the order flow ===== */
 var FAQ=[
-  {kw:["free","cost","fee","charge to use","how much","subscription"], a:"Posting your price is free. You only pay when your order is filled — and only up to the price you name, never more."},
-  {kw:["charged now","hold","authorize","charge my card","pay now","upfront","deposit"], a:"No — you authorize a hold for your price. You're charged only if Pacer fills your order at or below it; if we can't, the hold is released in full."},
-  {kw:["can't get","doesn't fill","not filled","no seller","if it fails"], a:"Then nothing's charged — the hold is released and you owe nothing. Raise your price, give it more time, or just buy at retail."},
-  {kw:["more than my price","overcharge","higher than","pay more","hidden fee","extra"], a:"Never. Your price is the ceiling — all-in, with taxes and shipping included."},
-  {kw:["beat retail","cheaper","lower price","below retail","discount","save money","how does this work"], a:"A few ways: sellers can fill a direct order below the price they're allowed to advertise publicly; I pool your order with other runners and post it to the TrustPixel exchange so they compete; a longer delivery window gives them time to source it; and since returns are only for wrong or defective orders, you skip the 'return tax' baked into retail. It's your shoe — you already know it fits."},
-  {kw:["how long","take","time","when will","how fast"], a:"Up to the window you give me — more time means better odds, since I can pool demand and work more sellers."},
-  {kw:["exchange","trustpixel","marketplace","where posted"], a:"It's a marketplace where your open order is posted and verified sellers compete to fill it at your price."},
-  {kw:["negotiate","scan","how do you find","agent","search for"], a:"Your order goes out to sellers and an agent scans daily for the best price. You're charged only if it lands at or below your number."},
-  {kw:["guarantee","guaranteed","sure to get","definitely get","certain"], a:"It's not guaranteed — your price is a ceiling, not a promise. The lower you go and the shorter the window, the less likely it fills."},
-  {kw:["legit","trust","scam","safe","reliable","who are the sellers"], a:"Every seller is verified — you're buying from vetted sellers, not a random marketplace listing."},
-  {kw:["authentic","fake","real shoes","genuine","replica","knockoff"], a:"New, authentic pairs from verified sellers. No replicas."},
-  {kw:["fit","return","returns","wrong size","send back","refund"], a:"Pacer's built for runners reordering a shoe they already know — so fit isn't a gamble. Returns are for incorrect or defective orders only."},
-  {kw:["buy now","right away","today","immediately","in a hurry","need them now"], a:"Sure — 'Buy now at retail' takes you to the lowest seller to buy today. Name your price if you'd rather wait for less."},
-  {kw:["data","privacy","track","sell my","my info","personal info","what do you collect"], a:"Only your shoe's SKU and ship-to ZIP get posted to the exchange — nothing else. Your data isn't the product."},
-  {kw:["cancel","edit","change my order","change my price","modify","update my order"], a:"As long as your order hasn't filled, you can edit or cancel it anytime — the hold drops off."},
-  {kw:["notified","how do i know","email me","let me know","status"], a:"We email you the moment it's filled — or if we couldn't hit your price."}
+  {q:"Why is Pacer cheaper than retail?", open:true, kw:["beat retail","cheaper","lower price","below retail","discount","save money","best deal","map","why is it cheap"], a:"Brands set a Minimum Advertised Price (MAP); sellers can't <em>advertise</em> below it, but they can quietly fill a real, committed order under it. When you name your price and authorize a hold, the order is real, so verified sellers compete to clear stock to you. A flexible delivery window gives them room to source it cheap; and because you already know this shoe fits, you skip the returns 'tax' baked into retail."},
+  {q:"So how does it actually work?", open:true, kw:["how it works","how does this work","negotiate","scan","how do you find","agent","search for","free","cost","fee","subscription"], a:"You name your all-in price for a shoe you already know. And it's free to post. Pacer puts that order on the TrustPixel exchange, where verified sellers compete to fill it, while an agent works it for you every day. The moment someone meets your number, it's yours."},
+  {q:"Am I charged when I name my price?", open:true, kw:["charged now","hold","authorize","charge my card","pay now","upfront","deposit"], a:"No. You authorize a <b>hold</b>, not a payment. Your card isn't charged unless Pacer fills your order at or below your price. If we can't, the hold is released in full and you owe nothing."},
+  {q:"What if it doesn't fill? Or a seller wants more?", open:true, kw:["more than my price","overcharge","higher than","pay more","hidden fee","extra","can't get","doesn't fill","not filled","no seller","if it fails"], a:"Your price is a hard ceiling, all-in with tax and shipping; you'll never pay a cent more without saying yes. If a seller counters higher, you decide. And if nobody hits your number in time, the hold drops off and you owe nothing; raise your price, give it longer, or just buy at retail."},
+  {q:"Are the shoes and sellers for real?", open:true, kw:["legit","trust","scam","safe","reliable","who are the sellers","authentic","fake","real shoes","genuine","replica","knockoff"], a:"Every pair is new and authentic from a verified seller; no replicas, no random marketplace listings. Pacer is built for runners reordering a shoe they already know, so fit isn't a gamble, and returns are limited to orders that arrive wrong or defective."},
+  {q:"How long does it take?", open:false, kw:["how long","take","time","when will","how fast"], a:"Pacer works your order for 5 days; pooling demand and working more sellers to land your price."},
+  {q:"What is the TrustPixel exchange?", open:false, kw:["exchange","trustpixel","marketplace","where posted"], a:"It's a marketplace where your open order is posted and verified sellers compete to fill it at your price."},
+  {q:"Is a fill guaranteed?", open:false, kw:["guarantee","guaranteed","sure to get","definitely get","certain"], a:"It's not guaranteed; your price is a ceiling, not a promise. The lower you go, the less likely it fills within the 5-day window."},
+  {q:"What about fit and returns?", open:false, kw:["fit","return","returns","wrong size","send back","refund"], a:"Pacer's built for runners reordering a shoe they already know; so fit isn't a gamble. Returns are for incorrect or defective orders only."},
+  {q:"What if I need them today?", open:false, kw:["buy now","right away","today","immediately","in a hurry","need them now"], a:"Sure. 'No, I'll pay retail' takes you to the lowest seller to buy today. Name your price if you'd rather wait for less."},
+  {q:"What about my data and privacy?", open:false, kw:["data","privacy","track","sell my","my info","personal info","what do you collect"], a:"Only your shoe's SKU and ship-to ZIP get posted to the exchange; nothing else. Your data isn't the product."},
+  {q:"Can I edit or cancel my order?", open:false, kw:["cancel","edit","change my order","change my price","modify","update my order"], a:"As long as your order hasn't filled, you can edit or cancel it anytime; the hold drops off."},
+  {q:"How will I know when it's filled?", open:false, kw:["notified","how do i know","email me","let me know","status"], a:"We email you the moment it's filled; or if we couldn't hit your price."}
 ];
+function renderFaqSection(){
+  var lead=document.getElementById("faqLead");
+  if(lead){ lead.innerHTML=FAQ.filter(function(f){return f.open;}).map(function(f){
+    return '<div class="faqlead-item"><h3 class="faqlead-q">'+f.q+'</h3><p class="faqlead-a">'+f.a+'</p></div>';
+  }).join(""); }
+  var list=document.getElementById("faqList");
+  if(list){ list.innerHTML=FAQ.filter(function(f){return !f.open;}).map(function(f){
+    return '<details class="faqitem"><summary>'+f.q+'<span class="faqchev">⌄</span></summary><div class="faqa">'+f.a+'</div></details>';
+  }).join(""); }
+}
 function matchFaq(text){
   var t=(text||"").toLowerCase().trim();
   var isQ = t.indexOf("?")>-1 || /(^|\s)(how|what|is|are|can|do|does|why|when|will|who)\b/.test(t);
@@ -1061,7 +1315,7 @@ function answerFaq(q, faq){
   var snap={ html:CV.lastPrompt.html||"", chips:CV.lastPrompt.chips||null, placeholder:CV.lastPrompt.placeholder||"" };
   addUser(q);
   var ans = faq.fallback
-    ? "Good question — I don't have a quick answer for that one. Our full FAQ covers more, or email the team at <b>hello@trustpixel.ai</b> and they'll help."
+    ? "Good question. I don't have a quick answer for that one. Our full FAQ covers more, or email the team at <b>hello@trustpixel.ai</b> and they'll help."
     : faq.a;
   var html='<span class="faq-a">'+ans+'</span>'+(snap.html?('<div class="faq-sep"></div>'+snap.html):"");
   addBot(html, function(){ if(snap.chips) setQuick(snap.chips); });
@@ -1070,16 +1324,16 @@ function answerFaq(q, faq){
   CV.lastPrompt={ html:snap.html, chips:snap.chips, placeholder:snap.placeholder };
 }
 var CARDEDIT=null, orderExpanded=false;
-var EDITABLE=['shoe','size','colors','zip','deliver'];
+var EDITABLE=['shoe','gens','size','colors','zip','deliver'];
 /* collapsed summary <-> expanded editable card */
-function toggleOrderExpand(){ orderExpanded=!orderExpanded; updateOrder(); }
+function toggleOrderExpand(){ orderExpanded=!orderExpanded; updateOrder(); if(orderExpanded){ var o=document.getElementById("order"); if(o) o.scrollIntoView({behavior:"smooth",block:"nearest"}); } }
 /* after the order has been searched, committing an edit re-runs the price search */
 function reSearch(){
   if(!orderComplete()) return;
   if(!document.getElementById("results").classList.contains("on")) return; // only once a search has run
   findLowest();
 }
-var PENDLBL={shoe:'Add a shoe',size:'Add your size',colors:'Pick colors',zip:'Add a ZIP',deliver:'Set a date'};
+var PENDLBL={shoe:'Add a shoe',gens:'Pick model years',size:'Add your size',colors:'Pick colors',zip:'Add a ZIP',deliver:'Set a date'};
 function setRow(field, val, done){
   var el=document.getElementById("o-"+field), row=document.getElementById("row-"+field);
   if(!el) return;
@@ -1108,6 +1362,13 @@ function cardWidth(w){ S.width=w; updateOrder(); }
 function cardZip(v){ var z=(v||'').replace(/[^0-9]/g,'').slice(0,5); S.zip=z.length===5?z:null; CV.done.zip=(z.length===5); }
 function cardDeliver(v){ if(v){ S.deliver=new Date(v+'T00:00:00'); CV.done.deliver=true; } updateOrder(); }
 function cardColor(n){ if(!S.colors)S.colors=[]; var i=S.colors.indexOf(n); if(i>-1)S.colors.splice(i,1); else S.colors.push(n); CV.done.colors=true; updateOrder(); }
+function cardGen(g){
+  if(!S.gens) S.gens=[];
+  var i=S.gens.indexOf(g);
+  if(i>-1){ if(S.gens.length>1) S.gens.splice(i,1); } else { S.gens.push(g); }   // keep at least one year
+  S.gens.sort(function(a,b){ return S.shoe.gens.indexOf(a)-S.shoe.gens.indexOf(b); });
+  CV.done.gens=true; updateOrder();
+}
 function cardEditor(field){
   if(field==='size'){
     var opts='<option value="">US size</option>';
@@ -1122,13 +1383,20 @@ function cardEditor(field){
     return '<div class="sizeline"><input class="zipin" inputmode="numeric" maxlength="5" placeholder="5-digit ZIP" value="'+(S.zip||'')+'" oninput="cardZip(this.value)" onkeydown="if(event.key===\'Enter\')closeEdit()"><button class="donelink" onclick="closeEdit()">Done</button></div>';
   }
   if(field==='deliver'){
-    return '<div class="sizeline"><input type="date" class="zipin" style="width:auto" value="'+toISO(S.deliver||addMonths(1))+'" onchange="cardDeliver(this.value)"><button class="donelink" onclick="closeEdit()">Done</button></div>';
+    return '<div class="sizeline"><input type="date" class="zipin" style="width:auto" value="'+toISO(S.deliver||defaultDeliver())+'" onchange="cardDeliver(this.value)"><button class="donelink" onclick="closeEdit()">Done</button></div>';
   }
   if(field==='colors'){
-    if(!S.shoe) return '<span class="acsub">Pick a shoe first</span>';
+    if(!S.shoe) return '<span class="acsub">Pick a shoe first</span> <button class="donelink" onclick="closeEdit()">Done</button>';
     return '<div class="coledit">'+S.shoe.colors.map(function(c){
       var on=(S.colors||[]).indexOf(c.n)>-1;
       return '<button class="cswatch'+(on?' on':'')+'" onclick="cardColor(\''+c.n.replace(/'/g,"\\'")+'\')"><span class="chip" style="background:'+c.c+'"></span>'+c.n+(on?'<span class="tick">✓</span>':'')+'</button>';
+    }).join('')+'<button class="donelink" onclick="closeEdit()">Done</button></div>';
+  }
+  if(field==='gens'){
+    if(!S.shoe) return '<span class="acsub">Pick a shoe first</span> <button class="donelink" onclick="closeEdit()">Done</button>';
+    return '<div class="coledit">'+S.shoe.gens.map(function(g,i){
+      var on=(S.gens||[]).indexOf(g)>-1, age=i===0?'this year':i===1?'last year':i+' yrs ago';
+      return '<button class="cswatch'+(on?' on':'')+'" onclick="cardGen(\''+g+'\')">'+g+' <span class="gage">'+age+'</span>'+(on?'<span class="tick">✓</span>':'')+'</button>';
     }).join('')+'<button class="donelink" onclick="closeEdit()">Done</button></div>';
   }
   return '';
@@ -1152,7 +1420,7 @@ function renderFoot(){
   f.classList.add("on");
   var miss=missingFields();
   if(miss.length){
-    f.innerHTML='<div class="ofoot-need">Complete your order to search — still need <b>'+miss.join(", ")+'</b>.</div>'+
+    f.innerHTML='<div class="ofoot-need">Complete your order to search; still need <b>'+miss.join(", ")+'</b>.</div>'+
       '<button class="ofind" disabled>Find today’s prices →</button>';
   } else {
     f.innerHTML='<button class="ofind" onclick="triggerSearch()">Find today’s prices →</button>';
@@ -1161,22 +1429,27 @@ function renderFoot(){
 function triggerSearch(){ if(orderComplete()) startSearch(); }
 function updateOrder(){
   var d=CV.done||{};
-  setRow("shoe", S.shoe?(S.shoe.brand+" "+S.shoe.name+(S.gens&&S.gens.length?(" "+S.gens.join(" / ")):"")):"", d.shoe);
-  setRow("size", S.size?(S.gender+" · US "+S.size):"", d.size);
-  setRow("zip", S.zip||"", d.zip);
-  if(!S.deliver) S.deliver=addMonths(1);
-  setRow("deliver", fmtDate(S.deliver), true);
-  setRow("colors", S.shoe?((S.colors&&S.colors.length)?S.colors.join(", "):S.shoe.colors.map(function(c){return c.n;}).join(", ")):"", !!S.shoe);
-  var n=["shoe","size","zip","deliver","colors"].filter(function(k){return d[k];}).length;
-  var p=document.getElementById("prog"); if(p) p.textContent=n+" of 5";
+  if(!S.deliver) S.deliver=defaultDeliver();
+  // per-row completion (drives the green check + progress count)
+  var rGens=!!(S.shoe && S.gens && S.gens.length);
+  var cShoe=!!S.shoe, cSize=!!S.size, cZip=!!S.zip, cColors=!!S.shoe, cDeliver=!!S.deliver;
+  setRow("shoe", S.shoe?(S.shoe.brand+" "+S.shoe.name):"", cShoe);
+  setRow("gens", rGens?S.gens.join(" / "):"", rGens);
+  setRow("size", S.size?(S.gender+" · US "+S.size):"", cSize);
+  setRow("colors", S.shoe?((S.colors&&S.colors.length)?S.colors.join(", "):S.shoe.colors.map(function(c){return c.n;}).join(", ")):"", cColors);
+  setRow("zip", S.zip||"", cZip);
+  setRow("deliver", fmtDate(S.deliver), cDeliver);
+  var n=[cShoe,rGens,cSize,cColors,cZip,cDeliver].filter(Boolean).length;
+  var p=document.getElementById("prog"); if(p) p.textContent=n+" of 6";
   // one-line summary: brand + make · delivery · zip
   var osum=document.getElementById("osum-main");
   if(osum) osum.textContent=(S.shoe?(S.shoe.brand+" "+S.shoe.name+(S.gens&&S.gens.length?(" "+S.gens.join("/")):"")):"Your order")+
     (S.deliver?(" · by "+fmtDate(S.deliver)):"")+(S.zip?(" · "+S.zip):"");
-  // card collapses to the summary only AFTER a search; chevron expands it for editing
+  // post-search: summary lives in the live-prices card; chevron shows the editable #order card
   var searched=document.getElementById("results").classList.contains("on");
   var ord=document.getElementById("order");
   if(ord){ ord.classList.toggle("collapsed", searched); ord.classList.toggle("expanded", searched && orderExpanded); }
+  var oc=document.querySelector("#vlist .osum"); if(oc) oc.classList.toggle("open", orderExpanded);
   updateSend();
   renderFoot();
 }
@@ -1273,7 +1546,7 @@ function reselectShoe(s){
 
 function startChat(){
   thread().innerHTML=""; clearQuick();
-  S.shoe=null; S.gens=[]; S.colors=[]; S.size=null; S.zip=null; S.gender="Men's"; S.deliver=addMonths(1); S.negUntil=null; orderExpanded=false;
+  S.shoe=null; S.gens=[]; S.colors=[]; S.size=null; S.zip=null; S.gender="Men's"; S.deliver=defaultDeliver(); S.negUntil=null; orderExpanded=false;
   var _ci=document.getElementById("cin"); if(_ci)_ci.value="";
   CV.done={}; updateOrder();
   document.getElementById("composer").style.display="";
@@ -1338,8 +1611,8 @@ function setZip(z){ addUser(z); S.zip=z; CV.done.zip=true; updateOrder(); askCol
 function askDeliver(){
   if(CV.done.deliver){ return askColors(); }
   CV.step="deliver"; clearQuick();
-  var def=S.deliver||addMonths(1); S.deliver=def;
-  addBot("When do you need them by? I default to <b>"+fmtDate(def)+"</b>.<br><span style=\"color:var(--ink2);font-size:13px\">A later delivery date usually means a better price — it gives sellers time to source your pair.</span>", function(){
+  var def=S.deliver||defaultDeliver(); S.deliver=def;
+  addBot("When do you need them by? I default to <b>"+fmtDate(def)+"</b>.<br><span style=\"color:var(--ink2);font-size:13px\">A later delivery date usually means a better price; it gives sellers time to source your pair.</span>", function(){
     setQuick([
       {label:fmtDate(def)+" works", cls:"go", go:function(){ addUser(fmtDate(def)+" works"); askColors(); }},
       {label:"Within 2 weeks", go:function(){ S.deliver=new Date(Date.now()+14*864e5); addUser("Within 2 weeks ("+fmtDate(S.deliver)+")"); askColors(); }},
@@ -1352,7 +1625,7 @@ function askColors(){
   if(orderComplete()){ return startSearch(); }   // colorway is optional (defaults to any) and never blocks search
   CV.step="colors"; clearQuick();
   if(!S.colors) S.colors=[];
-  addBot("Which colorway? Tap the ones you want and I'll price each — or just hit <b>Any color →</b>.", function(){ renderColorQuick(); });
+  addBot("Which colorway? Tap the ones you want and I'll price each; or just hit <b>Any color →</b>.", function(){ renderColorQuick(); });
   setPlaceholder("Tap colorways, then Continue →");
 }
 function renderColorQuick(){
@@ -1369,7 +1642,7 @@ function askConfirm(){
   var sum=shoeLabel()+" &middot; "+S.gender+" US "+S.size+" &middot; ship to "+S.zip+" &middot; "+(S.colors.length?S.colors.join(", "):"any color");
   addBot("Here's what I've got:<br><b>"+sum+"</b><br>Want me to find today's lowest price?", function(){
     setQuick([
-      {label:"Yes — find my price", cls:"go", go:function(){ addUser("Yes — find my price"); startSearch(); }},
+      {label:"Yes. Find my price", cls:"go", go:function(){ addUser("Yes. Find my price"); startSearch(); }},
       {label:"Start over", go:function(){ addUser("Start over"); startChat(); }}
     ]);
   });
@@ -1380,7 +1653,7 @@ function startSearch(){
   // gate: never search without a complete order card
   if(!orderComplete()){
     var miss=missingFields();
-    addBot("Almost there — I still need <b>"+miss.join("</b>, <b>")+"</b> before I can pull live prices.");
+    addBot("Almost there; I still need <b>"+miss.join("</b>, <b>")+"</b> before I can pull live prices.");
     return;
   }
   if(CV.editing){ CV.editing=null; acClose(); }
@@ -1399,30 +1672,12 @@ function computeLowest(){
   return best;
 }
 function onPriceReady(){
-  CV.step="bywhen";
+  CV.step="done";
   document.getElementById("composer").style.display="";
   var b=computeLowest(); CV.low=b;
-  var lo=Math.round(b.price*0.8), hi=Math.round(b.price*0.9);
-  addBot("The lowest price I found today for <b>"+S.shoe.name+" "+b.gen+"</b> in size <b>"+S.size+"</b> is <b>$"+b.price+"</b> all in &mdash; shipping and taxes included.<br><br><b>Want Pacer to negotiate a better price for you?</b>", function(){
-    setQuick([
-      {label:"Yes", cls:"go", go:function(){ addUser("Yes"); askNegTime(); }},
-      {label:"No, I'll pay retail", go:function(){ addUser("No, I'll pay retail"); payRetail(); }}
-    ]);
-  });
-  setPlaceholder("Yes, or I'll pay retail");
-}
-function askNegTime(){
-  CV.step="negtime"; clearQuick();
-  addBot("How long do you want me to negotiate? <b>More time lets me pool your order with other runners after the same shoe and work more sellers to drive the price down.</b>", function(){
-    setQuick([
-      {label:"5 minutes", go:function(){ addUser("5 minutes"); canWait(0); }},
-      {label:"1 hour", go:function(){ addUser("1 hour"); canWait(0); }},
-      {label:"1 day", go:function(){ addUser("1 day"); canWait(1); }},
-      {label:"1 week", cls:"go", go:function(){ addUser("1 week"); canWait(7); }},
-      {label:"1 month", go:function(){ addUser("1 month"); canWait(30); }}
-    ]);
-  });
-  setPlaceholder("How long should I negotiate?");
+  clearQuick();
+  addBot("The lowest I found today for <b>"+S.shoe.name+" "+b.gen+"</b> in size <b>"+S.size+"</b> is <b>$"+b.price+"</b> all-in. <b>Name your price</b> below and I'll negotiate it down over the next <b>5 days</b>; or pay retail.");
+  setPlaceholder("Ask a question…");
 }
 function payRetail(){
   CV.step="done"; clearQuick();
@@ -1443,7 +1698,7 @@ function needSoon(days){
 function canWait(days){
   CV.step="done"; clearQuick();
   // negotiation window is its OWN date — never clobber deliver-by
-  var nu=new Date(Date.now()+(days||7)*864e5), capped=false;
+  var nu=new Date(Date.now()+(days||5)*864e5), capped=false;
   if(S.deliver && nu>S.deliver){ nu=new Date(S.deliver); capped=true; }
   S.negUntil=nu; updateOrder();
   var line = capped
@@ -1509,22 +1764,332 @@ function routeText(t){
     if(/^n|start|over|edit|change/i.test(t)){ startChat(); } else { startSearch(); }
   } else if(CV.step==="bywhen"){
     addUser(t);
-    if(/^n|no|retail|pay/i.test(t)){ payRetail(); } else { askNegTime(); }
-  } else if(CV.step==="negtime"){
-    addUser(t);
-    var _d=/month/i.test(t)?30:/week/i.test(t)?7:/day/i.test(t)?1:0; canWait(_d);
+    if(/^n|no|retail|pay/i.test(t)){ payRetail(); } else { canWait(5); }
   } else if(CV.step==="again"){
     addUser(t);
     if(/^y|yes|sure|maybe|prob/i.test(t)){ pitchListing(); } else { addBot("All set &mdash; your lowest options are listed below, ready to buy today."); CV.step="done"; clearQuick(); document.getElementById("composer").style.display="none"; }
   }
 }
 
+/* ---- orders page (the signed-in view) ---- */
+var ORD_COUNTER_EXP=Date.now()+(11*3600+42*60+8)*1000;   // live countdown target for the open counter-offer
+var ORDERS=[
+  {id:'TPX-7741', item:'Hoka Skyward X',        size:"Men's · US 14",   price:152, retail:225, fill:150, fillBy:'2026-06-20', deliverBy:'2026-06-26', status:'filled',    when:'Jun 19, 9:42a', action:'Receipt'},
+  {id:'TPX-7690', item:'Nike Vaporfly 3',       size:"Men's · US 9",    price:198, retail:260,           fillBy:'2026-06-30', deliverBy:'2026-07-10', status:'searching', sub:'Good-til-canceled', action:'Cancel', counter:{price:205, by:'Jun 27'}},
+  {id:'TPX-7733', item:'Hoka Clifton 9',        size:"Men's · US 14",   price:112, retail:150,           fillBy:'2026-06-28', deliverBy:'2026-07-04', status:'searching', sub:'Good-til-canceled', action:'Cancel'},
+  {id:'TPX-7735', item:'New Balance 1080 v14',  size:"Men's · US 10",   price:129, retail:170,           fillBy:'2026-06-27', deliverBy:'2026-07-03', status:'suspended', sub:'card hold declined; pulled from exchange', action:'Fix card'},
+  {id:'TPX-7740', item:'Saucony Endorphin Speed 4', size:"Men's · US 10.5", price:112, retail:170, fill:112, fillBy:'2026-06-19', deliverBy:'2026-06-25', status:'filled', when:'Jun 18, 2:03p', action:'Receipt'},
+  {id:'TPX-7701', item:'Nike Pegasus 41',       size:"Men's · US 11",   price:108, retail:140,           fillBy:'2026-06-10', deliverBy:'2026-06-17', status:'expired',   sub:'never hit your price', action:'Resubmit'},
+  {id:'TPX-7688', item:'Brooks Ghost 16',       size:"Men's · US 12",   price:104, retail:140,           fillBy:'2026-06-14', deliverBy:'2026-06-21', status:'canceled',  sub:'canceled by you · Jun 12', action:'Resubmit'}
+];
+function ordFmtDate(iso){ if(!iso) return '—'; var d=new Date(iso+'T00:00:00'); return isNaN(d.getTime())?'—':d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+var ORD_FILTER='all', ordTimerInt=null;
+function ordMatch(o){
+  if(ORD_FILTER==='open')   return ['searching','suspended'].indexOf(o.status)>-1;
+  if(ORD_FILTER==='filled') return o.status==='filled';
+  if(ORD_FILTER==='cxl')    return ['expired','canceled'].indexOf(o.status)>-1;
+  return true;
+}
+function ordCountdown(){
+  var ms=ORD_COUNTER_EXP-Date.now(); if(ms<0)ms=0;
+  function p(n){return (n<10?'0':'')+n;}
+  return p(Math.floor(ms/3.6e6))+':'+p(Math.floor(ms%3.6e6/6e4))+':'+p(Math.floor(ms%6e4/1e3));
+}
+function ordBtnClass(a){ return (a==='Resubmit'||a==='Fix card')?'ord-btn solid':'ord-btn'; }
+function ordBadge(o){
+  if(o.status==='filled')    return '<span class="ord-badge filled">Filled $'+o.fill+'</span>';
+  if(o.status==='searching') return '<span class="ord-badge searching">Searching</span>';
+  if(o.status==='suspended') return '<span class="ord-badge suspended">⚠ Suspended</span>';
+  if(o.status==='expired')   return '<span class="ord-badge expired">Expired</span>';
+  if(o.status==='canceled')  return '<span class="ord-badge canceled">Canceled</span>';
+  return '';
+}
+function ordSub(o){
+  if(o.status==='filled'){ var s=o.retail-o.fill; return (o.when||'')+(s>0?' · <span class="ord-save">saved $'+s+'</span>':''); }
+  if(o.counter) return '<span class="ord-cpending">⚡ counter-offer waiting</span>';
+  return o.sub||'';
+}
+function ordStat(n,l){ return '<div class="ord-stat"><div class="os-n">'+n+'</div><div class="os-l">'+l+'</div></div>'; }
+function renderAlert(o){
+  var a=document.getElementById('ordAlert'); if(!a) return;
+  if(!o){ a.style.display='none'; a.innerHTML=''; return; }
+  a.style.display='flex';
+  a.innerHTML='<div class="oa-l"><span class="oa-tag">⚡ Counter-offer</span>'+
+    'A verified seller will fill your <b>'+o.item+'</b> <span class="oa-id">'+o.id+'</span> now at <b>$'+o.counter.price+'</b>; $'+(o.counter.price-o.price)+' over your $'+o.price+', delivered by '+o.counter.by+'.'+
+    '<span class="oa-exp">Expires in <b id="ordTimer">'+ordCountdown()+'</b></span></div>'+
+    '<div class="oa-r"><button class="ord-btn solid" onclick="ordCounter(\''+o.id+'\',1)">Accept $'+o.counter.price+'</button><button class="ord-btn" onclick="ordCounter(\''+o.id+'\',0)">Decline</button></div>';
+}
+function renderOrders(){
+  // dashboard stats (don't change with tab)
+  var openN=0, filledN=0, saved=0;
+  ORDERS.forEach(function(o){
+    if(['searching','suspended'].indexOf(o.status)>-1) openN++;
+    if(o.status==='filled'){ filledN++; saved+=Math.max(0,o.retail-o.fill); }
+  });
+  var st=document.getElementById('ordStats');
+  if(st) st.innerHTML=ordStat(openN,'Open orders')+ordStat(filledN,'Filled')+ordStat('$'+saved,'Saved vs retail');
+  renderAlert(ORDERS.filter(function(o){return o.counter;})[0]);
+  // rows — filtered, sorted by fill-by (earliest first) in every tab
+  var list=ORDERS.filter(ordMatch).slice().sort(function(a,b){ return (a.fillBy<b.fillBy)?-1:(a.fillBy>b.fillBy)?1:0; });
+  document.getElementById('ordRows').innerHTML=list.map(function(o){
+    return '<div class="ord-row'+(o.status==='suspended'?' danger':'')+(o.counter?' has-counter':'')+'">'+
+      '<span class="ord-id">'+o.id+'</span>'+
+      '<span class="ord-item"><b>'+o.item+'</b>'+(o.size?'<span class="ord-meta">'+o.size+'</span>':'')+'</span>'+
+      '<span class="ord-price">$'+o.price+'</span>'+
+      '<span class="ord-date">'+ordFmtDate(o.fillBy)+'</span>'+
+      '<span class="ord-date">'+ordFmtDate(o.deliverBy)+'</span>'+
+      '<span class="ord-status">'+ordBadge(o)+'<span class="ord-sub">'+ordSub(o)+'</span></span>'+
+      '<span class="ord-act"><button class="'+ordBtnClass(o.action)+'" onclick="ordAction(\''+o.id+'\')">'+o.action+'</button></span>'+
+    '</div>';
+  }).join('')||'<div class="ord-empty">No orders in this view.</div>';
+}
+function ordSetFilter(f,btn){ ORD_FILTER=f; [].slice.call(document.querySelectorAll('#ordTabs button')).forEach(function(b){ b.classList.toggle('on',b===btn); }); renderOrders(); }
+function ordAction(id){ /* prototype: Receipt / Resubmit / Cancel / Fix card */ }
+function ordCounter(id,accept){
+  var o=null; for(var i=0;i<ORDERS.length;i++){ if(ORDERS[i].id===id){o=ORDERS[i];break;} }
+  if(!o)return;
+  if(accept){ o.status='filled'; o.fill=o.counter.price; o.when='just now · accepted counter'; o.action='Receipt'; }
+  else { o.sub='Good-til-canceled · counter declined'; }
+  delete o.counter; renderOrders();
+}
+function showOrders(){
+  ORD_FILTER='all';
+  [].slice.call(document.querySelectorAll('#ordTabs button')).forEach(function(b,i){ b.classList.toggle('on',i===0); });
+  renderOrders();
+  document.getElementById('orderspage').style.display='block';
+  document.body.style.overflow='hidden';
+  window.scrollTo(0,0);
+  if(ordTimerInt) clearInterval(ordTimerInt);
+  ordTimerInt=setInterval(function(){ var t=document.getElementById('ordTimer'); if(t) t.textContent=ordCountdown(); }, 1000);
+}
+function closeOrders(){ document.getElementById('orderspage').style.display='none'; document.body.style.overflow=''; if(ordTimerInt){ clearInterval(ordTimerInt); ordTimerInt=null; } }
+
 /* ---- boot ---- */
 (function init(){
-  S.deliver=addMonths(1);
+  S.deliver=defaultDeliver();
   startChat();
+  renderFaqSection();
 })();
 </script>
 
 
+<div id="copage" style="display:none">
+
+
+<div class="topbar"></div>
+<div class="wrap">
+
+  <!-- ============ STEP 1: review the hold ============ -->
+  <div class="left" id="step1">
+    <div class="left-inner">
+      <div class="merch">
+        <a class="back" href="#" onclick="pacerCloseCheckout();return false" aria-label="Back">‹</a>
+        <span class="merch-name">TrustPixel</span>
+        <span class="test">Test mode</span>
+      </div>
+
+      <p class="pay-eyebrow">Authorization hold for TrustPixel</p>
+      <div class="amount"><span id="amt">$84.00</span><span class="cur">USD</span></div>
+      <span class="hold-tag"><span class="dot"></span>Hold; authorized, not charged</span>
+
+      <div class="item">
+        <div class="thumb" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+            <path d="M3 21c2.5.3 5-.2 7.5-1.8 2-1.3 3.4-3 5.4-4.2 1.7-1 3.2-.8 4.3.6l1.4 1.8c.8 1 1.9 1.6 3.2 1.8l2.6.4c1.4.2 2.6 1.1 3 2.5l.2.7c.2.9-.4 1.7-1.3 1.7H4.5C3.7 25 3 24.3 3 23.5V21z" fill="#c9cdd6"></path>
+            <path d="M3 21c2.5.3 5-.2 7.5-1.8 2-1.3 3.4-3 5.4-4.2" stroke="#9aa0ad" stroke-width="1.1" fill="none" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="item-t">
+          <div class="nm">Nike Pegasus</div>
+          <div class="sub">Men's US 10 · Qty 1</div>
+        </div>
+        <div class="item-price">$84.00<small>all-in max</small></div>
+      </div>
+
+      <div class="mandate">
+        <div class="mandate-hd">
+          <span class="dot"></span>
+          <span class="lbl">Signed mandate</span>
+          <span class="sig">TPX·9F2A…E1</span>
+        </div>
+        <div class="m-row"><span class="k">Buy</span><span class="v">Nike Pegasus · Men's US 10</span></div>
+        <div class="m-row"><span class="k">Eligible models</span><span class="v"><span class="mdl">41</span><span class="mdl">40</span><span class="mdl">39</span></span></div>
+        <div class="m-row"><span class="k">Ship to</span><span class="v">San Francisco · 94110</span></div>
+        <div class="m-row"><span class="k">Deliver by</span><span class="v">Jul 24, 2026</span></div>
+        <div class="m-row"><span class="k">Won't exceed</span><span class="v">$84.00 all-in</span></div>
+      </div>
+
+      <div class="sum">
+        <div class="sum-row"><span>Authorization hold</span><span class="v">$84.00</span></div>
+        <div class="sum-row muted"><span>Captured only if secured ≤ your price</span><span class="v">$0.00 today</span></div>
+        <div class="sum-row tot"><span>Hold total</span><span class="v">$84.00</span></div>
+      </div>
+
+      <div class="how">
+        <h4>How this hold works</h4>
+        <ul>
+          <li><span class="n">1</span><span>We place a <b>hold</b> on your card for $84.00. Nothing is charged now.</span></li>
+          <li><span class="n">2</span><span>TrustPixel sources your Nike Pegasus across verified sellers until <b>Jul 24</b>.</span></li>
+          <li><span class="n">3</span><span>The hold is <b>captured only</b> when we secure a pair at or below $84.00 all-in. Otherwise it's released.</span></li>
+        </ul>
+      </div>
+
+      <button class="pay-btn continue-btn" onclick="goStep(2)">Continue to checkout →</button>
+
+      <div class="foot">
+        <span class="stripe">Powered by <b>stripe</b></span>
+        <span class="sep">·</span>
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2: shipping + payment ============ -->
+  <div class="right" id="step2">
+    <div class="right-inner">
+      <button class="backrev" type="button" onclick="goStep(1)">‹ Back to review</button>
+      <button class="applepay" type="button" onclick="finish()"><span class="logo"></span>Pay</button>
+      <div class="ordiv">Or authorize with card</div>
+
+      <div class="field-group">
+        <p class="sec-label">Contact</p>
+        <input class="inp" id="email" type="email" placeholder="Email" value="">
+      </div>
+
+      <div class="field-group">
+        <p class="sec-label">Shipping address</p>
+        <div class="addr-stack">
+          <input class="inp" id="name" placeholder="Full name">
+          <div class="select-wrap">
+            <select id="country"><option>United States</option><option>Canada</option><option>United Kingdom</option></select>
+            <span class="chev">▾</span>
+          </div>
+          <input class="inp" id="addr" placeholder="Address">
+        </div>
+        <a class="manual" href="#">Enter address manually</a>
+      </div>
+
+      <div class="field-group">
+        <p class="sec-label">Payment details</p>
+        <span class="lbl">Card information</span>
+        <div class="stack">
+          <div class="row cardnum">
+            <input class="inp" id="card" placeholder="1234 1234 1234 1234" inputmode="numeric" autocomplete="cc-number">
+            <span class="brands">
+              <span class="brand" style="background:#1a1f71">VISA</span>
+              <span class="brand" style="background:#eb001b">MC</span>
+              <span class="brand" style="background:#006fcf">AMEX</span>
+              <span class="brand" style="background:#0a0a0a">JCB</span>
+            </span>
+          </div>
+          <div class="row">
+            <input class="inp" id="exp" placeholder="MM / YY" inputmode="numeric" autocomplete="cc-exp">
+            <input class="inp" id="cvc" placeholder="CVC" inputmode="numeric" maxlength="4" autocomplete="cc-csc">
+          </div>
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="samebill" checked="">
+        <span class="box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.5 9.5 3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+        <span>Billing address is same as shipping</span>
+      </label>
+
+      <div class="auth-note">
+        <div class="h"><span class="dot"></span>This is a hold, not a payment</div>
+        <p>Submitting authorizes TrustPixel to hold <b>$84.00</b> on your card. Your card is <b>charged only</b> if we secure your Nike Pegasus at or below $84.00 all-in, shipped to 94110 by Jul 24. If we can't, the hold is released in full.</p>
+        <p>By authorizing, you commit to the purchase under this mandate. <b>All sales are final</b> once captured; no returns, except when the delivered product doesn't match your order mandate.</p>
+      </div>
+
+      <button class="pay-btn" onclick="finish()"><span class="lock">🔒</span>Authorize hold · $84.00</button>
+      <p class="pay-fine">You authorize a hold under your signed mandate. <a href="#">Terms</a> and <a href="#">mandate details</a> apply.</p>
+    </div>
+  </div>
+</div>
+
+<div class="done-veil" id="done">
+  <div class="done-card">
+    <div class="done-ring">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17.5 19 7" stroke="#3c4257" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </div>
+    <h2>Hold authorized</h2>
+    <p>We've placed a <span class="amt">$84.00</span> hold on your card. Nothing is charged yet.</p>
+    <p>TrustPixel is now sourcing your Nike Pegasus. We'll capture only if we secure it at or below your price by Jul 24; and email you either way.</p>
+    <button class="reset" onclick="document.getElementById('done').classList.remove('on')">← Back to checkout</button>
+  </div>
+</div>
+
+
+</div>
+<script>
+
+  // checkout input niceties — (re)bound after each template restore
+  function coBindInputs(){
+    var card=document.getElementById('card');
+    if(card) card.addEventListener('input',function(){
+      this.value=this.value.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+    });
+    var exp=document.getElementById('exp');
+    if(exp) exp.addEventListener('input',function(){
+      var v=this.value.replace(/\D/g,'').slice(0,4);
+      if(v.length>2)v=v.slice(0,2)+' / '+v.slice(2);
+      this.value=v;
+    });
+    document.querySelectorAll('#copage .stack .row').forEach(function(row){
+      row.querySelectorAll('input').forEach(function(i){
+        i.addEventListener('focus',function(){row.classList.add('focused');});
+        i.addEventListener('blur',function(){row.classList.remove('focused');});
+      });
+    });
+  }
+  // snapshot the pristine checkout so each open re-populates from a clean template
+  var COTPL=null;
+  function coReset(){
+    var c=document.getElementById('copage'); if(!c) return;
+    if(COTPL===null){ COTPL=c.innerHTML; } else { c.innerHTML=COTPL; }
+    coBindInputs();
+  }
+  function finish(){ document.getElementById('done').classList.add('on'); }
+  function goStep(n){
+    document.getElementById('step1').style.display = n===1 ? 'flex' : 'none';
+    document.getElementById('step2').style.display = n===2 ? 'flex' : 'none';
+    window.scrollTo(0,0);
+  }
+
+  /* ---- populate the hold from ?price=&shoe=&color=&size=&gender=&models=&zip=&by=&neguntil= ---- */
+  function coPopulate(){
+    var O=window.PACER_ORDER||{};
+    function qp(k){ return (O[k]!=null)?O[k]:null; }
+    function fmt(s,wy){ if(!s) return ''; var d=new Date(s+'T00:00:00'); if(isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', wy?{month:'short',day:'numeric',year:'numeric'}:{month:'short',day:'numeric'}); }
+    var price=qp('price'), shoe=qp('shoe'), color=qp('color'), size=qp('size'),
+        gender=qp('gender'), models=qp('models'), zip=qp('zip'), by=qp('by'), neg=qp('neguntil')||qp('by');
+    if(!price && !shoe) return; // no order params -> keep demo defaults
+    var p2 = price ? (Math.round(parseFloat(price))).toFixed(2) : null;
+    var deliverFull=fmt(by,true), negShort=fmt(neg,false);
+    var reps=[];
+    if(p2) reps.push(['84.00', p2]);
+    if(negShort) reps.push(['Jul 24', negShort]);   // every "source/secure until" date = the negotiation deadline
+    if(zip) reps.push(['94110', zip]);
+    if(shoe) reps.push(['Nike Pegasus', shoe]);
+    if(size) reps.push(['US 10', 'US '+size]);
+    if(gender) reps.push(["Men's", gender]);
+    var w=document.createTreeWalker(document.getElementById("copage"), NodeFilter.SHOW_TEXT, null), node, nodes=[];
+    while(node=w.nextNode()) nodes.push(node);
+    nodes.forEach(function(nd){ var t=nd.nodeValue, o=t;
+      reps.forEach(function(r){ if(t.indexOf(r[0])>-1) t=t.split(r[0]).join(r[1]); });
+      if(t!==o) nd.nodeValue=t; });
+    // deliver-by row carries its OWN date (overrides the blanket negotiation-date pass above); eligible models = the order's gens
+    document.querySelectorAll('#copage .mandate .m-row').forEach(function(r){
+      var k=r.querySelector('.k'), v=r.querySelector('.v'); if(!k||!v) return;
+      if(/deliver by/i.test(k.textContent) && deliverFull) v.textContent=deliverFull;
+      if(/eligible/i.test(k.textContent) && models) v.innerHTML=models.split('/').map(function(g){return '<span class="mdl">'+g+'</span>';}).join('');
+    });
+    var sub=document.querySelector('#copage .item-t .sub');
+    if(sub) sub.textContent=(gender?gender+' \u00b7 ':'')+'US '+(size||'')+(color&&color!=='Any color'?' \u00b7 '+color:'')+' \u00b7 Qty 1';
+    if(shoe) document.title='TrustPixel \u2014 Authorize hold \u00b7 '+shoe;
+  }
+
+</script>
 </body></html>
