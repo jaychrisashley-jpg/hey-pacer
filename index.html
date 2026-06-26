@@ -181,10 +181,6 @@ input,select{font-family:inherit}
 .order-hd .prog{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--goldDeep);font-variant-numeric:tabular-nums}
 .row{display:flex;align-items:flex-start;gap:12px;padding:9px 20px;border-bottom:1px solid var(--line);min-height:0}
 .row:last-of-type{border-bottom:0}
-/* completion indicator: light-grey ring = still needed, green check = done */
-.row .dot{width:17px;height:17px;border-radius:50%;flex-shrink:0;background:#fff;border:2px solid #E0DAC9;margin-top:1px;position:relative;transition:.2s}
-.row.set .dot{background:var(--green);border-color:var(--green)}
-.row.set .dot::after{content:"";position:absolute;left:5px;top:2px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .row .k{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink2);width:96px;flex-shrink:0;padding-top:2px}
 .row .body{flex:1;min-width:0}
 .v-pending{font-size:15px;font-weight:600;font-style:italic;color:#B9B2A2;padding-top:3px}
@@ -203,6 +199,27 @@ button.v-text:hover{color:var(--goldDeep)}
 .rowedit.pend:hover{color:var(--navy)}
 .v-edit{padding-top:1px}
 .coledit{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+/* ---- form-first variant (?form): no chat, type the shoe straight into the card ---- */
+.formmode #chat{display:none}
+.formlead{display:none}
+.formmode .formlead{display:block;text-align:center;font-size:14px;line-height:1.5;color:var(--ink2);margin:0 0 2px}
+.formmode .order{margin-top:16px}
+.shoewrap{position:relative}
+.shoeinpwrap{position:relative}
+.shoeinp{width:100%;font-family:inherit;font-size:16px;font-weight:700;color:var(--navy);background:transparent;border:0;border-bottom:2px solid var(--line);padding:2px 0 6px;outline:none;border-radius:0}
+.shoeinp:focus{border-bottom-color:var(--gold)}
+.shoeinp::placeholder{color:#B9B2A2;font-weight:600;font-style:italic}
+.shoeghost{position:absolute;left:0;top:2px;font-size:16px;font-weight:700;color:#CBC4B4;pointer-events:none;white-space:pre;overflow:hidden;max-width:100%}
+.shoeghost .gpre{visibility:hidden}
+.shoedrop{display:none;position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:40;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 38px rgba(16,36,59,.18);padding:6px;max-height:300px;overflow:auto}
+.shoedrop.on{display:block}
+@media (max-width:560px){
+  .stage{padding:14px 14px 48px}
+  .headline{font-size:24px;margin-bottom:12px}
+  .row{padding:10px 16px;gap:10px}
+  .row .k{width:74px;font-size:10.5px}
+  .order-hd,.ofoot{padding-left:16px;padding-right:16px}
+}
 .cswatch{display:inline-flex;align-items:center;gap:7px;padding:6px 11px 6px 6px;border:1.5px solid var(--line);border-radius:var(--rpill);font-size:13px;font-weight:600;color:var(--navy);background:var(--surface);cursor:pointer;transition:.12s}
 .cswatch:hover{border-color:var(--navy)}
 .cswatch.on{border-color:var(--gold);background:var(--goldWash);color:var(--goldDeep)}
@@ -696,14 +713,16 @@ button.v-text:hover{color:var(--goldDeep)}
       </div>
     </div>
 
+    <p class="formlead" id="formlead">Tell us your shoe, size, and zip code. We'll reach out to sellers directly and work to get your named price.</p>
+
     <div class="order" id="order">
       <div class="order-hd"><span class="ttl">Order details</span><span class="prog" id="prog">0 of 5</span></div>
-      <div class="row" id="row-shoe"><span class="dot"></span><span class="k">Shoe</span><div class="body"><div class="v-pending" id="o-shoe">—</div></div></div>
-      <div class="row" id="row-gens"><span class="dot"></span><span class="k">Model years</span><div class="body"><div class="v-pending" id="o-gens">—</div></div></div>
-      <div class="row" id="row-size"><span class="dot"></span><span class="k">Size</span><div class="body"><div class="v-pending" id="o-size">—</div></div></div>
-      <div class="row" id="row-colors"><span class="dot"></span><span class="k">Colors</span><div class="body"><div class="v-pending" id="o-colors">—</div></div></div>
-      <div class="row" id="row-zip"><span class="dot"></span><span class="k">Ship to</span><div class="body"><div class="v-pending" id="o-zip">—</div></div></div>
-      <div class="row" id="row-deliver"><span class="dot"></span><span class="k">Deliver by</span><div class="body"><div class="v-pending" id="o-deliver">—</div></div></div>
+      <div class="row" id="row-shoe"><span class="k">Shoe</span><div class="body"><div class="v-pending" id="o-shoe">—</div></div></div>
+      <div class="row" id="row-gens"><span class="k">Model years</span><div class="body"><div class="v-pending" id="o-gens">—</div></div></div>
+      <div class="row" id="row-size"><span class="k">Size</span><div class="body"><div class="v-pending" id="o-size">—</div></div></div>
+      <div class="row" id="row-colors"><span class="k">Colors</span><div class="body"><div class="v-pending" id="o-colors">—</div></div></div>
+      <div class="row" id="row-zip"><span class="k">Ship to</span><div class="body"><div class="v-pending" id="o-zip">—</div></div></div>
+      <div class="row" id="row-deliver"><span class="k">Deliver by</span><div class="body"><div class="v-pending" id="o-deliver">—</div></div></div>
       <div class="ofoot" id="ofoot"></div>
     </div>
 
@@ -843,6 +862,8 @@ const CATALOG=[
   {id:'lonepeak', brand:'Altra', name:'Lone Peak', gens:['9','8'], kw:['altra','lone peak','lonepeak'], cat:'Trail · zero-drop', pop:66, base:110, msrp:140, colors:[C.orange,C.teal,C.blk]},
 ];
 const POPULAR=['peg','clifton','ghost','nimbus','bondi','monster'];
+/* form-first is the default: type the shoe straight into the card, no chat. Append ?chat to see the old chat flow. */
+var FORM_MODE=!/[?&]chat\b/.test(location.search);
 
 /* ---- state ---- */
 const S={ shoe:null, gens:[], colors:[], gender:"Men's", size:null, width:'Standard', zip:null, deliver:null, negUntil:null };
@@ -1356,6 +1377,7 @@ function setRow(field, val, done){
   var el=document.getElementById("o-"+field), row=document.getElementById("row-"+field);
   if(!el) return;
   if(CARDEDIT===field){ el.className="v-edit"; el.innerHTML=cardEditor(field); row.classList.add("set"); return; }
+  if(FORM_MODE && field==="shoe" && !S.shoe){ el.className="v-edit"; el.innerHTML=shoeEditorHTML(); row.classList.remove("set"); return; }
   var ed = EDITABLE.indexOf(field)>-1;
   if(done && val){
     el.className="v-text";
@@ -1369,7 +1391,7 @@ function setRow(field, val, done){
 }
 /* ---- editable order card ---- */
 function editField(f){
-  if(f==='shoe'){ CARDEDIT=null; CV.editing='shoe'; var ci=document.getElementById('cin'); ci.value=''; ci.focus(); setPlaceholder('Search a different shoe…'); acRender(); return; }
+  if(f==='shoe' && !FORM_MODE){ CARDEDIT=null; CV.editing='shoe'; var ci=document.getElementById('cin'); ci.value=''; ci.focus(); setPlaceholder('Search a different shoe…'); acRender(); return; }
   CARDEDIT=f; updateOrder();
   var host=document.getElementById('o-'+f), fe=host&&host.querySelector('select,input'); if(fe) fe.focus();
 }
@@ -1417,7 +1439,79 @@ function cardEditor(field){
       return '<button class="cswatch'+(on?' on':'')+'" onclick="cardGen(\''+g+'\')">'+g+' <span class="gage">'+age+'</span>'+(on?'<span class="tick">✓</span>':'')+'</button>';
     }).join('')+'<button class="donelink" onclick="closeEdit()">Done</button></div>';
   }
+  if(field==='shoe') return shoeEditorHTML();
   return '';
+}
+/* ---- form-first shoe input: inline ghost completion + tappable dropdown ---- */
+var SHOEITEMS=[], SHOEIDX=-1;
+function shEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function shoeEditorHTML(){
+  var val=S.shoe?(S.shoe.brand+' '+S.shoe.name):'';
+  return '<div class="shoewrap">'+
+    '<div class="shoeinpwrap"><span class="shoeghost" id="shoeGhost"></span>'+
+    '<input id="shoeFld" class="shoeinp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" '+
+    'placeholder="Search your shoe, e.g. Hoka Clifton" value="'+shEsc(val)+'" '+
+    'oninput="shoeType()" onkeydown="shoeKey(event)" onfocus="shoeFocus()" onblur="setTimeout(shoeBlur,170)"></div>'+
+    '<div class="shoedrop" id="shoeDrop"></div>'+
+  '</div>';
+}
+function shoeFocus(){ var inp=document.getElementById('shoeFld'); if(inp && !(inp.value||'').trim()){ SHOEIDX=-1; shoeRenderDrop(acTopPopular()); } }
+function shoeType(){
+  var inp=document.getElementById('shoeFld'); if(!inp) return;
+  var q=inp.value||'';
+  var ms=q.trim()?acMatch(q):acTopPopular();
+  SHOEIDX=-1; shoeRenderDrop(ms); shoeGhost(q, acMatch(q)[0]);
+}
+function shoeGhost(q, top){
+  var g=document.getElementById('shoeGhost'); if(!g) return; g.innerHTML='';
+  if(!q || !top) return;
+  var full=top.brand+' '+top.name;
+  if(full.toLowerCase().indexOf(q.toLowerCase())===0 && full.length>q.length){
+    g.innerHTML='<span class="gpre">'+shEsc(q)+'</span>'+shEsc(full.slice(q.length));
+  }
+}
+function shoeRenderDrop(ms){
+  var d=document.getElementById('shoeDrop'); if(!d) return;
+  if(!ms || !ms.length){ d.classList.remove('on'); d.innerHTML=''; SHOEITEMS=[]; return; }
+  SHOEITEMS=ms; if(SHOEIDX>=ms.length) SHOEIDX=ms.length-1;
+  d.innerHTML=ms.map(function(s,i){
+    return '<button type="button" class="acrow'+(i===SHOEIDX?' on':'')+'" onmousedown="event.preventDefault()" onclick="shoePick('+i+')">'+
+      '<span class="acsw" style="background:'+s.colors[0].c+'"></span>'+
+      '<span class="actxt"><b>'+shEsc(s.brand+' '+s.name)+'</b><span class="acsub">'+shEsc(s.cat||'')+' · from $'+(s.base||120)+'</span></span>'+
+      '<span class="acgo">Pick ↵</span></button>';
+  }).join('');
+  d.classList.add('on');
+}
+function shoeHi(){ var rows=document.querySelectorAll('#shoeDrop .acrow'); for(var i=0;i<rows.length;i++) rows[i].classList.toggle('on', i===SHOEIDX); }
+function shoePick(i){
+  var s=SHOEITEMS[i]||SHOEITEMS[0]; if(!s) return;
+  S.shoe=s; S.colors=[]; S.gens=[s.gens[0]]; CV.done.shoe=true;
+  CARDEDIT=null; SHOEITEMS=[]; SHOEIDX=-1;
+  updateOrder();
+}
+function shoeAcceptGhost(){
+  var inp=document.getElementById('shoeFld'); if(!inp) return false;
+  var top=acMatch(inp.value||'')[0]; if(!top) return false;
+  var full=top.brand+' '+top.name, q=inp.value||'';
+  if(full.toLowerCase().indexOf(q.toLowerCase())===0 && full.length>q.length){ inp.value=full; shoeType(); return true; }
+  return false;
+}
+function shoeKey(e){
+  var d=document.getElementById('shoeDrop'), open=d&&d.classList.contains('on');
+  if(e.key==='ArrowDown'){ if(open){ e.preventDefault(); SHOEIDX=Math.min(SHOEIDX+1, SHOEITEMS.length-1); shoeHi(); } return; }
+  if(e.key==='ArrowUp'){ if(open){ e.preventDefault(); SHOEIDX=Math.max(SHOEIDX-1, 0); shoeHi(); } return; }
+  if(e.key==='Enter'){ e.preventDefault(); if(open && SHOEITEMS.length){ shoePick(SHOEIDX>-1?SHOEIDX:0); } return; }
+  if(e.key==='Tab' || (e.key==='ArrowRight' && e.target.selectionStart===(e.target.value||'').length)){
+    if(shoeAcceptGhost() && e.key==='Tab') e.preventDefault(); return;
+  }
+  if(e.key==='Escape'){ if(d) d.classList.remove('on'); }
+}
+function shoeBlur(){ var d=document.getElementById('shoeDrop'); if(d) d.classList.remove('on'); var g=document.getElementById('shoeGhost'); if(g) g.innerHTML=''; }
+function startForm(){
+  S.shoe=null; S.gens=[]; S.colors=[]; S.size=null; S.zip=null; S.gender="Men's"; S.deliver=defaultDeliver(); S.negUntil=null;
+  CV.done={}; CV.step=null; CV.editing=null; CARDEDIT=null; orderExpanded=false;
+  updateOrder();
+  var inp=document.getElementById('shoeFld'); if(inp) inp.focus();
 }
 function orderComplete(){ return !!(S.shoe && S.size && S.zip); }
 function updateSend(){
@@ -1885,7 +1979,8 @@ function closeOrders(){ document.getElementById('orderspage').style.display='non
 /* ---- boot ---- */
 (function init(){
   S.deliver=defaultDeliver();
-  startChat();
+  if(FORM_MODE){ document.body.classList.add('formmode'); startForm(); }
+  else { startChat(); }
   renderFaqSection();
 })();
 </script>
