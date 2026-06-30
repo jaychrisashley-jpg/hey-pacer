@@ -695,7 +695,7 @@ button.v-text:hover{color:var(--goldDeep)}
 <body>
 
 
-<div class="top"><div class="logo"><span class="dot"></span>Pacer</div><nav class="topnav"><a class="navlink" href="#faq">FAQ</a><a class="navlink signin" href="#" onclick="showOrders();return false">Sign In</a></nav></div>
+<div class="top"><a class="logo" href="index.html" style="text-decoration:none" title="Back to search"><span class="dot"></span>Pacer</a><nav class="topnav"><a class="navlink" href="#faq">FAQ</a><a class="navlink" href="merchant.html">Merchant Login</a><a class="navlink signin" href="#" onclick="showOrders();return false">Sign In</a></nav></div>
 
 <div class="stage">
   <div class="col">
@@ -740,10 +740,14 @@ button.v-text:hover{color:var(--goldDeep)}
   <div class="faqlead" id="faqLead"></div>
 </section>
 
+<footer style="border-top:1px solid var(--line);max-width:540px;margin:30px auto 0;padding:22px 0 42px;text-align:center;font-size:12.5px;color:var(--ink2)">
+  powered by <a href="https://www.trustpixel.ai" target="_blank" rel="noopener" style="color:var(--navy);font-weight:700;text-decoration:none">TrustPixel</a>
+</footer>
+
 <!-- orders page (sign-in view) -->
 <div id="orderspage" style="display:none">
   <div class="ord-topbar">
-    <div class="logo"><span class="dot"></span>Pacer</div>
+    <a class="logo" href="index.html" style="text-decoration:none" title="Back to search"><span class="dot"></span>Pacer</a>
     <button class="ord-back" onclick="closeOrders()">← Back to search</button>
   </div>
   <div class="ord-wrap">
@@ -765,6 +769,7 @@ button.v-text:hover{color:var(--goldDeep)}
       </div>
     </div>
   </div>
+  <footer style="text-align:center;padding:22px 0 6px;font-size:12.5px;color:var(--ink2)">powered by <a href="https://www.trustpixel.ai" target="_blank" rel="noopener" style="color:var(--navy);font-weight:700;text-decoration:none">TrustPixel</a></footer>
 </div>
 
 <!-- wait & save modal -->
@@ -1255,6 +1260,7 @@ function goCheckout(){
     zip:S.zip||"", by:S.deliver?toISO(S.deliver):"",
     neguntil:toISO(S.negUntil||S.deliver||defaultDeliver())
   };
+  writeOpenOrder(my);                                   // publish to the merchant feed (localStorage)
   if(typeof closeWait==="function") closeWait();        // close the Name-Your-Price modal
   if(typeof coReset==="function") coReset();            // restore pristine checkout template
   if(typeof coPopulate==="function") coPopulate();      // fill the checkout from the order
@@ -1265,6 +1271,27 @@ function goCheckout(){
   window.scrollTo(0,0);
 }
 function pacerCloseCheckout(){ var c=document.getElementById("copage"); if(c) c.style.display="none"; document.body.style.overflow=""; }
+/* publish the posted open order to the merchant portal (read on the /merchant feed) */
+function writeOpenOrder(price){
+  try{
+    var sh=S.shoe||{}, gen=(WS.headGen||(S.gens&&S.gens[0])||"");
+    var order={
+      id:"TPX-"+Math.floor(1000+Math.random()*9000),
+      brand:sh.brand||"", model:sh.name||"", gen:gen, cat:sh.cat||"",
+      msrp:sh.msrp||((sh.base||120)+30), color:(WS.headColor||(S.colors&&S.colors[0])||"Any color"),
+      gender:S.gender||"Men's", size:S.size||"", width:S.width||"Standard",
+      city:"", state:"", zip:S.zip||"", price:+price||0,
+      deliverBy:S.deliver?toISO(S.deliver):"", fillBy:toISO(S.negUntil||S.deliver||defaultDeliver()),
+      status:"open"
+    };
+    if(!order.model || !order.price) return;
+    var raw=localStorage.getItem("pacer_open_orders");
+    var arr=raw?JSON.parse(raw):[];
+    if(!Array.isArray(arr)) arr=[];
+    arr.unshift(order);
+    localStorage.setItem("pacer_open_orders", JSON.stringify(arr.slice(0,50)));
+  }catch(e){ /* storage unavailable — portal still works on its synthetic pool */ }
+}
 
 /* ---- results CTAs ---- */
 function buyNowLowest(){
