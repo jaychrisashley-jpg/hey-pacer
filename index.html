@@ -1002,8 +1002,7 @@ function render(){
 
 /* ---- vendor price search ---- */
 const VENDORS=[
-  {n:'Running Warehouse', off:-8},
-  {n:"Dick's", off:0},
+  {n:"Dick's Sporting Goods", off:-8},
   {n:'Zappos', off:6},
   {n:'Fleet Feet', off:10},
   {n:'Sports Basement', off:-4},
@@ -1023,7 +1022,7 @@ function findLowest(){
 }
 var LOWSKU=null; var NYP=[];
 function nypIdx(e,i){ e.stopPropagation(); var o=NYP[i]; if(o) openWaitSave({dataset:o}); }
-var VDOMAIN={"Running Warehouse":"runningwarehouse.com","Dick's":"dickssportinggoods.com","Zappos":"zappos.com","Fleet Feet":"fleetfeet.com","Sports Basement":"sportsbasement.com"};
+var VDOMAIN={"Dick's Sporting Goods":"dickssportinggoods.com","Zappos":"zappos.com","Fleet Feet":"fleetfeet.com","Sports Basement":"sportsbasement.com"};
 function affLink(vendorName){ var d=VDOMAIN[vendorName]||("google.com/search?q="+encodeURIComponent(vendorName)); return "https://www."+d; }
 function skuPrice(gen, colorName, vendor){
   var ci=S.shoe.colors.findIndex(function(x){return x.n===colorName;});
