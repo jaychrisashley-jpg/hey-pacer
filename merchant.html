@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pacer for Merchants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F1E7; --surface:#FFFFFF; --ink:#10243B; --ink2:#5a6b7d; --navy:#003660; --navy2:#012a4a;
+  --gold:#FEBC11; --goldDeep:#A9750A; --goldWash:#FCEFC9; --green:#1E7A4D; --greenWash:#E4F1E9;
+  --line:#E4DCCB; --red:#B23B3B; --redWash:#F6E5E2;
+  --r:16px; --rpill:999px; --shadow:0 1px 2px rgba(16,36,59,.05),0 10px 30px rgba(16,36,59,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Archivo',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45}
+button{font-family:inherit;cursor:pointer;border:0;background:none}
+.tab-num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+/* ---- top bar ---- */
+.top{position:sticky;top:0;z-index:40;background:rgba(246,241,231,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:14px;height:62px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:21px;letter-spacing:-.02em;color:var(--navy)}
+.logo .dot{width:11px;height:11px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--goldWash)}
+.logo .sub{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--goldDeep);background:var(--goldWash);padding:3px 9px;border-radius:var(--rpill)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--green)}
+.live .blip{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,122,77,.4)}70%{box-shadow:0 0 0 8px rgba(30,122,77,0)}100%{box-shadow:0 0 0 0 rgba(30,122,77,0)}}
+.storesel{display:flex;align-items:center;gap:9px;background:var(--surface);border:1px solid var(--line);border-radius:var(--rpill);padding:5px 16px 5px 5px;box-shadow:var(--shadow)}
+.storesel .avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:12px}
+.storename{font-weight:700;font-size:14px;color:var(--ink)}
+.gearbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:17px;display:grid;place-items:center;box-shadow:var(--shadow);color:var(--ink2)}
+.gearbtn:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ---- settings ---- */
+.setcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.set-sec{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--goldDeep);background:#FBF8F1;padding:11px 18px;border-bottom:1px solid var(--line)}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.set-row:last-child{border-bottom:0}
+.set-label{font-weight:700;font-size:14px}
+.set-sub{font-size:12px;color:var(--ink2);margin-top:1px;max-width:46ch}
+.set-r{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.set-val{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
+.set-val.muted{font-weight:600;color:var(--ink2)}
+.penbtn{font-size:12px;color:var(--ink2);border:1px solid var(--line);border-radius:8px;width:28px;height:28px;display:grid;place-items:center;background:var(--surface);flex-shrink:0}
+.penbtn:hover{color:var(--navy);border-color:var(--navy)}
+.setinp{font:inherit;font-weight:700;font-size:15px;border:1.5px solid var(--gold);border-radius:9px;padding:6px 10px;width:110px;outline:none}
+.setlink{font-size:12px;font-weight:800;color:var(--goldDeep);padding:6px 4px}
+.setlink.gh{color:var(--ink2)}
+
+/* ---- value strip ---- */
+.strip{background:var(--navy);color:#fff}
+.strip-in{display:flex;gap:30px;flex-wrap:wrap;padding:13px 0}
+.strip .pt{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:#dCe6f0}
+.strip .pt b{color:#fff;font-weight:800}
+.strip .pt .ic{color:var(--gold);font-weight:900}
+
+/* ---- sync row ---- */
+.sync{display:flex;align-items:center;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 22px;margin:22px 0}
+.sync.connected{background:var(--greenWash);border-color:#BFE0CD}
+.sync .s-ic{width:46px;height:46px;border-radius:13px;background:var(--goldWash);display:grid;place-items:center;font-size:23px;flex-shrink:0}
+.sync.connected .s-ic{background:#fff}
+.sync .s-txt{flex:1;min-width:200px}
+.sync .s-txt b{font-size:16px;font-weight:800}
+.sync .s-txt div{font-size:13px;color:var(--ink2);margin-top:2px}
+.sync .s-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.platpick{display:inline-flex;gap:6px}
+.plat{border:1.5px solid var(--line);background:var(--surface);border-radius:11px;padding:8px 13px;font-weight:700;font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:7px}
+.plat:hover{border-color:var(--navy);color:var(--navy)}
+.plat.on{border-color:var(--navy);color:var(--navy);background:#fff;box-shadow:var(--shadow)}
+.plat .pdot{width:9px;height:9px;border-radius:2px}
+
+/* ---- buttons ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:800;font-size:14px;letter-spacing:.01em;padding:11px 18px;border-radius:var(--rpill);transition:.14s;white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--navy2)}
+.btn-gold:hover{filter:brightness(.96)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy2)}
+.btn-ghost{background:var(--surface);color:var(--navy);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--navy)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default;filter:none}
+
+/* ---- tabs ---- */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:6px 0 24px}
+.tab{font-weight:700;font-size:15px;color:var(--ink2);padding:12px 16px;border-bottom:2.5px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--navy)}
+.tab.on{color:var(--navy);border-bottom-color:var(--gold)}
+.tab .badge{font-size:11px;font-weight:800;background:var(--goldWash);color:var(--goldDeep);border-radius:var(--rpill);padding:2px 7px;margin-left:6px;vertical-align:1px}
+
+.page{display:none}
+.page.on{display:block;animation:fade .2s ease}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.head h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0}
+.head p{margin:3px 0 0;color:var(--ink2);font-size:14px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:48px 24px;text-align:center;color:var(--ink2)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:5px}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:3px 9px;border-radius:var(--rpill)}
+.tag-live{background:var(--greenWash);color:var(--green)}
+.tag-pend{background:var(--goldWash);color:var(--goldDeep)}
+
+/* ---- open-orders controls ---- */
+.ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.segset{display:inline-flex;background:#EFE7D6;border-radius:var(--rpill);padding:4px;gap:2px}
+.seg2{padding:8px 16px;border-radius:var(--rpill);font-weight:700;font-size:13.5px;color:var(--ink2)}
+.seg2.on{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
+.sortsel{font-size:13px;color:var(--ink2);font-weight:600;display:flex;align-items:center;gap:8px}
+.sortsel select{font:inherit;font-weight:700;color:var(--ink);border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 11px;outline:none;cursor:pointer}
+
+/* ---- group card ---- */
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.grp-h{display:flex;align-items:center;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line);background:#FBF8F1}
+.thumb{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,#F0EAdC,#E7DEC9);display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.grp-id{flex:1;min-width:170px}
+.grp-id .nm{font-weight:800;font-size:16px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.grp-id .mt{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.swatches{display:flex;gap:5px;margin-top:6px}
+.sw{width:14px;height:14px;border-radius:4px;border:1px solid rgba(16,36,59,.12)}
+.grp-m{display:flex;gap:24px}
+.grp-m .l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.grp-m .v{font-weight:800;font-size:16px;margin-top:2px}
+.grp-m .v.green{color:var(--green)}
+
+/* ---- order cost table ---- */
+.otable{padding:0}
+.ohead,.orow{display:grid;grid-template-columns:1.7fr .72fr 1.05fr 1.2fr .85fr .78fr .82fr 86px 138px;gap:12px;align-items:center;padding:11px 18px}
+.discpill{display:inline-block;font-weight:800;font-size:13.5px;padding:5px 11px;border-radius:var(--rpill);white-space:nowrap}
+.d-low{background:var(--greenWash);color:var(--green)}
+.d-mid{background:var(--goldWash);color:var(--goldDeep)}
+.d-high{background:var(--redWash);color:var(--red)}
+.ohead{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);border-bottom:1px solid var(--line);background:#FBF8F1}
+.orow{border-bottom:1px solid var(--line)}
+.orow:last-child{border-bottom:0}
+.orow:hover{background:#FCFAF4}
+.orow.countered{opacity:.62}
+.c-sku .s1{font-weight:700;font-size:14px}
+.c-sku .s2{font-size:11.5px;color:var(--ink2);margin-top:1px;font-family:ui-monospace,monospace}
+.c .cv{font-weight:700;font-size:14px}
+.c .cv.green{color:var(--green);font-weight:800}
+.c .cs{font-size:11px;color:var(--ink2);margin-top:1px}
+.c .cs.free{color:var(--green);font-weight:700}
+.c-act{display:flex;gap:6px;justify-content:flex-end}
+@media(max-width:900px){
+  .ohead{display:none}
+  .orow{grid-template-columns:1fr 1fr;gap:7px 12px;padding:14px 16px}
+  .c-sku{grid-column:1/-1}
+  .c-act{grid-column:1/-1;justify-content:flex-start;margin-top:4px}
+  .grp-m{display:none}
+}
+
+/* ---- payouts / fulfillment stats ---- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px}
+.stat .v{font-size:28px;font-weight:900;letter-spacing:-.02em}
+.stat .k{font-size:12.5px;color:var(--ink2);font-weight:600;margin-top:2px}
+.stat.green .v{color:var(--green)}
+.note{background:var(--goldWash);border:1px solid #F0DDA8;border-radius:var(--r);padding:16px 18px;font-size:13.5px;color:var(--ink);line-height:1.5}
+.note b{color:var(--goldDeep)}
+
+/* ---- fulfillment card ---- */
+.ff{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ff .spec{flex:1;min-width:220px}
+.ff .spec .s1{font-weight:800;font-size:15px}
+.ff .spec .s2{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.ff .pay{text-align:right;min-width:90px}
+.ff .pay .l{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.ff .pay .v{font-weight:900;font-size:17px;color:var(--green)}
+.ship-to{font-size:12.5px;color:var(--ink2);background:#FBF8F1;border:1px solid var(--line);border-radius:9px;padding:8px 11px;min-width:200px}
+.ship-to b{color:var(--ink)}
+.steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.stp{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ink2)}
+.stp .ball{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:10px;background:#fff}
+.stp.done{color:var(--green)}
+.stp.done .ball{background:var(--green);border-color:var(--green);color:#fff}
+.stp .arr{color:var(--line)}
+
+/* ---- modal ---- */
+.ov{position:fixed;inset:0;background:rgba(16,36,59,.45);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.ov.on{display:flex}
+.modal{background:var(--surface);border-radius:var(--r);box-shadow:0 20px 60px rgba(16,36,59,.3);width:100%;max-width:440px;overflow:hidden;animation:pop .18s ease}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.m-head{padding:20px 22px 0}
+.m-head h3{margin:0;font-size:19px;font-weight:800}
+.m-head p{margin:4px 0 0;color:var(--ink2);font-size:13px}
+.m-body{padding:16px 22px}
+.m-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.m-row:last-child{border-bottom:0}
+.m-row .k{color:var(--ink2)}
+.m-row .v{font-weight:700;text-align:right}
+.m-row .v.big{font-size:20px;color:var(--green);font-weight:900}
+.m-pay{background:var(--greenWash);border:1px solid #BFE0CD;border-radius:11px;padding:11px 14px;font-size:13px;color:var(--green);font-weight:700;margin-top:10px;text-align:center}
+.m-foot{display:flex;gap:10px;padding:16px 22px;border-top:1px solid var(--line)}
+.m-foot .btn{flex:1}
+.cinput{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;font-weight:800;font-size:20px;margin:6px 0 14px}
+.cinput .cur{color:var(--ink2)}
+.cinput input{border:0;outline:0;font:inherit;width:100px;background:transparent;color:var(--ink)}
+.seg{display:inline-flex;background:#EFE7D6;border-radius:var(--rpill);padding:4px;gap:2px}
+.seg button{padding:8px 14px;border-radius:var(--rpill);font-weight:700;font-size:13px;color:var(--ink2)}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:var(--shadow)}
+.lbl{font-weight:700;font-size:13px;margin-bottom:6px;display:block}
+
+/* ---- toast ---- */
+.toast{position:fixed;right:22px;bottom:22px;z-index:90;background:var(--navy);color:#fff;border-radius:13px;box-shadow:0 14px 40px rgba(16,36,59,.35);padding:13px 16px;font-size:13.5px;font-weight:600;max-width:320px;display:flex;gap:11px;align-items:center;transform:translateY(20px);opacity:0;transition:.25s}
+.toast.on{transform:none;opacity:1}
+.toast .t-ic{font-size:20px}
+.toast b{color:var(--gold)}
+
+.foot{border-top:1px solid var(--line);margin-top:40px;padding:26px 0;color:var(--ink2);font-size:12.5px}
+
+@media(max-width:820px){
+  .stats{grid-template-columns:1fr}
+  .b-runway,.b-count{min-width:80px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<!-- top bar -->
+<div class="top"><div class="wrap top-in">
+  <div class="logo"><span class="dot"></span>Pacer<span class="sub">Merchants</span></div>
+  <div class="top-right">
+    <span class="live"><span class="blip"></span><span id="liveCount">demand live</span></span>
+    <button class="gearbtn" onclick="showSettings()" title="Settings" aria-label="Settings">⚙</button>
+    <div class="storesel">
+      <span class="avatar" id="storeAvatar">RP</span>
+      <span class="storename" id="storeName">RunnersPace</span>
+    </div>
+  </div>
+</div></div>
+
+<div class="wrap">
+
+  <!-- store sync -->
+  <div class="sync" id="syncRow">
+    <div class="s-ic" id="syncIc">🔌</div>
+    <div class="s-txt" id="syncTxt"><b>Connect your store to auto-match orders</b><div>Sync your catalog and Pacer matches live buyer demand to the SKUs you carry.</div></div>
+    <div class="s-right" id="syncRight">
+      <div class="platpick" id="platpick"></div>
+      <button class="btn btn-navy" id="syncBtn" onclick="doSync()">Sync catalog</button>
+    </div>
+  </div>
+
+  <!-- tabs -->
+  <div class="tabs" id="tabsRow">
+    <button class="tab on" id="tab-open" onclick="showTab('open')">Open orders<span class="badge" id="openBadge">0</span></button>
+    <button class="tab" id="tab-fulfill" onclick="showTab('fulfill')">Fulfillment<span class="badge" id="fulfillBadge">0</span></button>
+    <button class="tab" id="tab-pay" onclick="showTab('pay')">Payouts</button>
+  </div>
+
+  <!-- OPEN ORDERS -->
+  <div class="page on" id="page-open">
+    <div class="head">
+      <div><h1>Open orders</h1><p id="openSub">Committed demand matched to your catalog, bundled by model.</p></div>
+    </div>
+    <div id="bundleList"></div>
+  </div>
+
+  <!-- FULFILLMENT -->
+  <div class="page" id="page-fulfill">
+    <div class="head"><div><h1>Fulfillment</h1><p>Orders you won. Ship each one individually to its buyer.</p></div></div>
+    <div id="ffList"></div>
+  </div>
+
+  <!-- PAYOUTS -->
+  <div class="page" id="page-pay">
+    <div class="head"><div><h1>Payouts</h1><p>Paid on ship via TrustPixel.</p></div></div>
+    <div class="stats">
+      <div class="stat"><div class="v tab-num" id="stLocked">$0</div><div class="k">Locked (to ship)</div></div>
+      <div class="stat green"><div class="v tab-num" id="stPaid">$0</div><div class="k">Paid</div></div>
+      <div class="stat"><div class="v tab-num" id="stWon">0</div><div class="k">Orders won</div></div>
+    </div>
+    <div class="note">Paid on ship via TrustPixel. <b>No Pacer fees</b> — the all-in price you accept is your payout, and you cover shipping &amp; tax from it. <b>All sales final</b>; refunds only for a defect, wrong item, or a missed delivery date.</div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="head">
+      <div><h1>Settings</h1><p>Synced from Shopify · tap the pencil to override any line.</p></div>
+      <button class="btn btn-ghost btn-sm" onclick="showTab('open')">← Back to orders</button>
+    </div>
+    <div class="setcard" id="setList"></div>
+    <div class="note" style="margin-top:14px">Shipping is priced by <b>delivery speed</b> (a longer window lets Pacer choose cheaper ground service) and <b>destination zone</b> (distance from your California warehouse — carriers bill by zone × service level). Defaults mirror a typical 2–3 lb shoe parcel. Sales tax is auto-remitted by destination, so it isn't set here.</div>
+  </div>
+
+  <div class="foot">Pacer for Merchants · committed orders settle on the TrustPixel exchange · demo environment</div>
+</div>
+
+<!-- fill confirm modal -->
+<div class="ov" id="fillOv" onclick="if(event.target===this)closeModal('fillOv')">
+  <div class="modal">
+    <div class="m-head"><h3 id="fillTitle">Fill this order</h3><p>First seller to accept wins. Confirm to lock the order.</p></div>
+    <div class="m-body" id="fillBody"></div>
+    <div class="m-foot">
+      <button class="btn btn-ghost" onclick="closeModal('fillOv')">Cancel</button>
+      <button class="btn btn-gold" id="fillConfirm">Confirm fill</button>
+    </div>
+  </div>
+</div>
+
+<!-- counter modal -->
+<div class="ov" id="cntOv" onclick="if(event.target===this)closeModal('cntOv')">
+  <div class="modal">
+    <div class="m-head"><h3>Counter the buyer</h3><p id="cntSub">Send a price back to the buyer's Pacer account.</p></div>
+    <div class="m-body">
+      <span class="lbl">Your price (can be above their max)</span>
+      <div class="cinput"><span class="cur">$</span><input id="cntPrice" inputmode="numeric" value=""></div>
+      <span class="lbl">Offer stands for</span>
+      <div class="seg" id="cntSeg">
+        <button onclick="cntPick(this,'24h')">24h</button>
+        <button class="on" onclick="cntPick(this,'48h')">48h</button>
+        <button onclick="cntPick(this,'3 days')">3 days</button>
+      </div>
+    </div>
+    <div class="m-foot">
+      <button class="btn btn-ghost" onclick="closeModal('cntOv')">Cancel</button>
+      <button class="btn btn-navy" id="cntSend">Send counter</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"><span class="t-ic">⚡</span><span id="toastTxt"></span></div>
+
+<script>
+/* ================= data ================= */
+var COL={
+  bw:{n:'Black / White',c:'linear-gradient(135deg,#1c1c1c 50%,#fafafa 50%)'},
+  blk:{n:'All Black',c:'#161616'}, wht:{n:'White',c:'#e7e7e7'}, gry:{n:'Wolf Grey',c:'#8a8f98'},
+  navy:{n:'Navy',c:'#27408b'}, blue:{n:'Blue',c:'#2a5db0'}, volt:{n:'Volt',c:'#c9e265'},
+  cream:{n:'Cream',c:'#efe6cf'}, storm:{n:'Storm',c:'#5b6470'}, teal:{n:'Teal',c:'#1b7f79'},
+  orange:{n:'Sunset',c:'#e08a3c'}, sky:{n:'Sky',c:'#7fb2e0'}, red:{n:'Infrared',c:'#c0392b'}, gold:{n:'Blue / Gold',c:'#1f4e79'}
+};
+var CATALOG=[
+  {brand:'Hoka', model:'Clifton', gen:'9', cat:'Road · neutral', msrp:150, colors:[COL.bw,COL.blue,COL.blk]},
+  {brand:'Hoka', model:'Bondi', gen:'9', cat:'Road · max cushion', msrp:170, colors:[COL.blk,COL.storm,COL.wht]},
+  {brand:'Hoka', model:'Mach', gen:'6', cat:'Road · lightweight', msrp:145, colors:[COL.blue,COL.volt,COL.blk]},
+  {brand:'Nike', model:'Pegasus', gen:'41', cat:'Road · neutral', msrp:140, colors:[COL.bw,COL.gry,COL.volt]},
+  {brand:'Nike', model:'Vaporfly', gen:'3', cat:'Race · carbon', msrp:260, colors:[COL.volt,COL.orange,COL.blk]},
+  {brand:'Nike', model:'Invincible', gen:'3', cat:'Road · max cushion', msrp:190, colors:[COL.blk,COL.blue,COL.wht]},
+  {brand:'Brooks', model:'Ghost', gen:'16', cat:'Road · neutral', msrp:140, colors:[COL.gry,COL.navy,COL.wht]},
+  {brand:'Brooks', model:'Glycerin', gen:'21', cat:'Road · max cushion', msrp:165, colors:[COL.navy,COL.blk,COL.cream]},
+  {brand:'Brooks', model:'Adrenaline GTS', gen:'24', cat:'Road · stability', msrp:140, colors:[COL.blk,COL.blue,COL.gry]},
+  {brand:'ASICS', model:'Gel-Nimbus', gen:'26', cat:'Road · neutral', msrp:165, colors:[COL.blk,COL.blue,COL.cream]},
+  {brand:'ASICS', model:'Gel-Kayano', gen:'31', cat:'Road · stability', msrp:165, colors:[COL.blk,COL.navy,COL.sky]},
+  {brand:'ASICS', model:'Novablast', gen:'4', cat:'Road · bouncy', msrp:140, colors:[COL.volt,COL.blue,COL.blk]},
+  {brand:'Saucony', model:'Endorphin Speed', gen:'4', cat:'Road · tempo', msrp:170, colors:[COL.blk,COL.blue,COL.wht]},
+  {brand:'Saucony', model:'Triumph', gen:'22', cat:'Road · max cushion', msrp:160, colors:[COL.navy,COL.blk,COL.cream]},
+  {brand:'On', model:'Cloudmonster', gen:'2', cat:'Road · max cushion', msrp:180, colors:[COL.blk,COL.wht,COL.storm]},
+  {brand:'On', model:'Cloudsurfer', gen:'7', cat:'Road · neutral', msrp:160, colors:[COL.sky,COL.blk,COL.storm]},
+  {brand:'New Balance', model:'1080', gen:'v14', cat:'Road · neutral', msrp:170, colors:[COL.blk,COL.gry,COL.blue]},
+  {brand:'New Balance', model:'Rebel', gen:'v4', cat:'Road · lightweight', msrp:140, colors:[COL.volt,COL.blk,COL.sky]},
+  {brand:'Adidas', model:'Ultraboost', gen:'5', cat:'Road · neutral', msrp:190, colors:[COL.blk,COL.wht,COL.gry]},
+  {brand:'Altra', model:'Torin', gen:'8', cat:'Road · zero-drop', msrp:150, colors:[COL.blk,COL.teal,COL.wht]},
+  {brand:'Altra', model:'Lone Peak', gen:'9', cat:'Trail · zero-drop', msrp:140, colors:[COL.orange,COL.teal,COL.blk]}
+];
+var PERSONAS={
+  rw:{name:'RunnersPace', initials:'RP', platform:'Shopify', skus:485, brands:null},
+  ff:{name:'Fleet Feet', initials:'FF', platform:'Shopify', skus:1900, brands:['Hoka','Brooks','ASICS','Saucony','New Balance','On','Altra']},
+  ss:{name:'Snailspace', initials:'SS', platform:'WooCommerce', skus:430, brands:['Hoka','Brooks','On','Altra','Saucony']}
+};
+var PLATFORMS=[{k:'Shopify',c:'#95BF47'},{k:'WooCommerce',c:'#7F54B3'},{k:'BigCommerce',c:'#121118'}];
+/* majority-California demand (pitching CA running stores first), with a few neighbors for spread */
+var CITIES=[
+  {city:'San Francisco',state:'CA',zip:'94110'},{city:'San Diego',state:'CA',zip:'92103'},{city:'Los Angeles',state:'CA',zip:'90026'},
+  {city:'Sacramento',state:'CA',zip:'95818'},{city:'San Jose',state:'CA',zip:'95125'},{city:'Oakland',state:'CA',zip:'94609'},
+  {city:'Berkeley',state:'CA',zip:'94703'},{city:'Santa Barbara',state:'CA',zip:'93101'},{city:'Santa Monica',state:'CA',zip:'90405'},
+  {city:'Pasadena',state:'CA',zip:'91105'},{city:'Palo Alto',state:'CA',zip:'94301'},{city:'Long Beach',state:'CA',zip:'90803'},
+  {city:'Davis',state:'CA',zip:'95616'},{city:'San Luis Obispo',state:'CA',zip:'93401'},{city:'Irvine',state:'CA',zip:'92612'},
+  {city:'Portland',state:'OR',zip:'97214'},{city:'Reno',state:'NV',zip:'89509'},{city:'Seattle',state:'WA',zip:'98101'}
+];
+
+/* deterministic pre-seed so the demo is stable across reloads */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+var RNG=mulberry32(20260626);
+function rpick(arr){return arr[Math.floor(RNG()*arr.length)];}
+function rint(a,b){return a+Math.floor(RNG()*(b-a+1));}
+var DAY=864e5;
+function today(){var d=new Date();d.setHours(0,0,0,0);return d;}
+function addDays(d,n){return new Date(d.getTime()+n*DAY);}
+function toISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDate(iso){if(!iso)return '—';var d=new Date(iso+'T00:00:00');return isNaN(d)?'—':d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function menSize(){return rpick([8,8.5,9,9.5,10,10.5,11,11.5,12,13]);}
+function womenSize(){return rpick([6,6.5,7,7.5,8,8.5,9,9.5,10,11]);}
+
+function seedOrders(){
+  var t=today(), out=[], id=7001;
+  CATALOG.forEach(function(m){
+    var n=rint(2,4);
+    for(var i=0;i<n;i++){
+      var gender=RNG()<0.6?"Men's":"Women's";
+      var c=rpick(m.colors);
+      var disc=rint(8,34);
+      out.push({
+        id:'TPX-'+(id++), brand:m.brand, model:m.model, gen:m.gen, cat:m.cat, msrp:m.msrp,
+        color:c.n, colorHex:c.c, gender:gender, size:gender==="Men's"?menSize():womenSize(),
+        width:RNG()<0.16?'Wide':'Standard', loc:rpick(CITIES), price:m.msrp-disc,
+        deliverBy:toISO(addDays(t,rint(21,49))), fillBy:toISO(addDays(t,rint(4,6))),
+        status:'open'
+      });
+    }
+  });
+  return out;
+}
+
+/* a handful of already-won orders so Fulfillment & Payouts demo populated, across the lifecycle */
+function seedWon(){
+  var t=today(), id=6501;
+  function mk(brand,model,gen,color,gender,size,loc,price,stage,dDeliver,street){
+    return { id:'TPX-'+(id++), brand:brand, model:model, gen:gen, color:color, gender:gender, size:size, width:'Standard',
+      loc:loc, price:price, payout:price, deliverBy:toISO(addDays(t,dDeliver)), stage:stage,
+      tracking:(stage==='shipped'||stage==='delivered')?('1Z'+rint(100,999)+rint(1000,9999)+rint(10,99)):null,
+      street:(stage!=='accepted')?street:null };
+  }
+  return [
+    mk('Hoka','Clifton','9','All Black',"Men's",10,{city:'San Francisco',state:'CA',zip:'94110'},138,'shipped',16,'1820 Market St'),
+    mk('On','Cloudmonster','2','White',"Women's",7.5,{city:'Berkeley',state:'CA',zip:'94703'},162,'shipped',12,'2410 Telegraph Ave'),
+    mk('Brooks','Ghost','16','Navy',"Men's",9.5,{city:'Sacramento',state:'CA',zip:'95818'},128,'delivered',5,'915 Land Park Dr'),
+    mk('Nike','Pegasus','41','Wolf Grey',"Women's",8,{city:'Los Angeles',state:'CA',zip:'90026'},124,'label',20,'3300 Sunset Blvd'),
+    mk('ASICS','Gel-Nimbus','26','All Black',"Men's",11,{city:'San Diego',state:'CA',zip:'92103'},149,'accepted',24,null),
+    mk('Saucony','Endorphin Speed','4','Blue',"Men's",10.5,{city:'Santa Barbara',state:'CA',zip:'93101'},151,'accepted',28,null)
+  ];
+}
+
+/* ================= state ================= */
+var STORE='rw';
+var SYNCED=true, PLATFORM='Shopify';
+var ORDERS=[];            // open pool (synthetic + live)
+var WON=[];               // fulfillment
+var TAB='open';
+var GROUP=false, SORT='fillBy';   // view controls — start flat, sorted by fill-by
+var injections=0, INJ_CAP=6, rtTimer=null;
+
+/* ---- merchant settings (synced from Shopify; each line overridable) ---- */
+var SETTINGS={
+  ship:{ ground:6, twoDay:11, express:18, overnight:28, zWest:3, zNational:7 },  // service base + zone surcharge ($)
+  autoFillPct:12,     // auto-accept orders at/below this % off list
+  handlingDays:1
+};
+var WEST=['OR','NV','WA','AZ','ID','UT'];
+
+/* ---- cost model: revenue (named price) − shipping (service × zone) − tax (by zip) ---- */
+var TAXRATE={CA:.0863,OR:0,NV:.08265,WA:.1025,TX:.0825,CO:.0765,IL:.1025,MA:.0625,NY:.08875,GA:.089,MN:.08025,TN:.0925,NC:.0725};
+function daysOut(iso){ if(!iso) return 30; return Math.max(0,Math.round((new Date(iso+'T00:00:00')-today())/DAY)); }
+function zoneAdd(state){ if(state==='CA') return 0; return WEST.indexOf(state)>-1 ? SETTINGS.ship.zWest : SETTINGS.ship.zNational; }
+function shipOf(o){
+  var d=daysOut(o.deliverBy), s=SETTINGS.ship, base, label;
+  if(d>=14){ base=s.ground; label='Ground'; }
+  else if(d>=8){ base=s.twoDay; label='2-day'; }
+  else if(d>=4){ base=s.express; label='Express'; }
+  else { base=s.overnight; label='Overnight'; }
+  var z=zoneAdd(o.loc&&o.loc.state);
+  return {label:label, cost:base+z, d:d, zone:z};
+}
+function taxOf(o){ var r=(o.loc&&TAXRATE[o.loc.state]!=null)?TAXRATE[o.loc.state]:.07; return {rate:r, amt:Math.round(o.price - o.price/(1+r))}; }
+function netOf(o){ return o.price - shipOf(o).cost - taxOf(o).amt; }
+function specLine(o){ return o.color+' · '+o.gender+' US '+o.size+(o.width==='Wide'?' · Wide':''); }
+function sortOrders(arr){
+  return arr.slice().sort(function(x,y){
+    if(SORT==='revenue') return y.price-x.price;
+    if(SORT==='net') return netOf(y)-netOf(x);
+    var kx=(SORT==='deliverBy'?x.deliverBy:x.fillBy)||'', ky=(SORT==='deliverBy'?y.deliverBy:y.fillBy)||'';
+    return kx<ky?-1:kx>ky?1:0;
+  });
+}
+var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= live (localStorage) bridge ================= */
+function readLiveOrders(){
+  try{
+    var raw=localStorage.getItem('pacer_open_orders'); if(!raw) return [];
+    var arr=JSON.parse(raw); if(!Array.isArray(arr)) return [];
+    return arr.map(function(o){
+      return {
+        id:o.id||('TPX-'+rint(8000,8999)), brand:o.brand||'', model:o.model||o.shoe||'', gen:o.gen||'',
+        cat:o.cat||'', msrp:+o.msrp||(+o.price+30), color:o.color||'Any color', colorHex:'#8a8f98',
+        gender:o.gender||"Men's", size:o.size||'', width:o.width||'Standard',
+        loc:{city:o.city||'',state:o.state||'',zip:o.zip||''}, price:+o.price||0,
+        deliverBy:o.deliverBy||o.by||'', fillBy:o.fillBy||o.neguntil||'', status:'open', live:true
+      };
+    }).filter(function(o){return o.model && o.price;});
+  }catch(e){ return []; }
+}
+
+/* ================= helpers ================= */
+function persona(){return PERSONAS[STORE];}
+function carries(brand){var b=persona().brands; return !b || b.indexOf(brand)>-1;}
+function feedOrders(){ return ORDERS.filter(function(o){return o.status!=='won' && (o.live || carries(o.brand));}); }
+
+function bundles(){
+  var map={};
+  feedOrders().forEach(function(o){
+    var k=o.brand+'|'+o.model+'|'+o.gen;
+    if(!map[k]) map[k]={key:k,brand:o.brand,model:o.model,gen:o.gen,cat:o.cat,msrp:o.msrp,colors:{},orders:[],live:false};
+    map[k].orders.push(o);
+    if(o.colorHex) map[k].colors[o.color]=o.colorHex;
+    if(o.live) map[k].live=true;
+  });
+  var arr=Object.keys(map).map(function(k){
+    var b=map[k], ps=b.orders.map(function(o){return o.price;});
+    b.count=b.orders.length;
+    b.low=Math.min.apply(null,ps); b.high=Math.max.apply(null,ps);
+    b.avg=Math.round(ps.reduce(function(a,c){return a+c;},0)/ps.length);
+    b.total=ps.reduce(function(a,c){return a+c;},0);
+    b.net=b.orders.reduce(function(a,o){return a+netOf(o);},0);
+    b.earliest=b.orders.map(function(o){return o.deliverBy;}).filter(Boolean).sort()[0];
+    b.earliestFill=b.orders.map(function(o){return o.fillBy;}).filter(Boolean).sort()[0];
+    return b;
+  });
+  arr.sort(function(a,b){ return (b.live-a.live) || (b.count-a.count); });
+  return arr;
+}
+
+/* ================= rendering ================= */
+function renderStoreSel(){
+  document.getElementById('storeAvatar').textContent=persona().initials;
+  var n=document.getElementById('storeName'); if(n) n.textContent=persona().name;
+}
+function renderPlatforms(){
+  document.getElementById('platpick').innerHTML=PLATFORMS.map(function(p){
+    return '<button class="plat'+(p.k===PLATFORM?' on':'')+'" onclick="pickPlatform(\''+p.k+'\')"><span class="pdot" style="background:'+p.c+'"></span>'+p.k+'</button>';
+  }).join('');
+}
+function pickPlatform(k){ if(SYNCED) return; PLATFORM=k; renderPlatforms(); }
+
+function renderSync(){
+  var row=document.getElementById('syncRow');
+  if(SYNCED){
+    row.classList.add('connected');
+    document.getElementById('syncIc').textContent='✓';
+    document.getElementById('syncTxt').innerHTML='<b>'+PLATFORM+' connected · '+persona().skus.toLocaleString()+' SKUs synced</b><div>Live buyer demand is matched to the models you carry, below.</div>';
+    document.getElementById('syncRight').innerHTML='<span class="tag tag-live">● Auto-matching on</span>';
+  } else {
+    row.classList.remove('connected');
+    document.getElementById('syncIc').textContent='🔌';
+    document.getElementById('syncTxt').innerHTML='<b>Connect your store to auto-match orders</b><div>Sync your catalog and Pacer matches live buyer demand to the SKUs you carry.</div>';
+    document.getElementById('syncRight').innerHTML='<div class="platpick" id="platpick"></div><button class="btn btn-navy" id="syncBtn" onclick="doSync()">Sync catalog</button>';
+    renderPlatforms();
+  }
+}
+function doSync(){
+  var btn=document.getElementById('syncBtn');
+  btn.disabled=true; btn.innerHTML='<span class="blip" style="background:#fff"></span> Syncing '+PLATFORM+'…';
+  setTimeout(function(){ SYNCED=true; renderSync(); renderAll(); startRealtime(); }, 1100);
+}
+
+function swatchRow(colorsObj){
+  return '<div class="swatches">'+Object.keys(colorsObj).slice(0,5).map(function(n){return '<span class="sw" title="'+n+'" style="background:'+colorsObj[n]+'"></span>';}).join('')+'</div>';
+}
+function setGroup(v){ GROUP=v; renderOpen(); }
+function setSort(v){ SORT=v; renderOpen(); }
+
+function ctrlBar(){
+  var opts=[['fillBy','Fill-by date'],['deliverBy','Deliver-by date'],['revenue','Revenue'],['net','Net payout']];
+  return '<div class="ctrl">'+
+    '<div class="segset"><button class="seg2'+(GROUP?' on':'')+'" onclick="setGroup(true)">Group by SKU</button>'+
+      '<button class="seg2'+(!GROUP?' on':'')+'" onclick="setGroup(false)">Flat list</button></div>'+
+    '<label class="sortsel">Sort by <select onchange="setSort(this.value)">'+
+      opts.map(function(s){return '<option value="'+s[0]+'"'+(SORT===s[0]?' selected':'')+'>'+s[1]+'</option>';}).join('')+
+    '</select></label></div>';
+}
+function colHead(){
+  return '<div class="ohead"><span>SKU · spec</span><span>Fill by</span><span>Deliver by</span><span>Ship to</span><span>Your price</span><span>Revenue</span><span>Net payout</span><span>Discount</span><span></span></div>';
+}
+function orowHTML(o, showSku){
+  var s=shipOf(o), tx=taxOf(o), net=o.price-s.cost-tx.amt, countered=o.status==='countered';
+  var adv=o.msrp, askDisc=Math.round((1-o.price/adv)*100);
+  var dcls=askDisc<=10?'d-low':askDisc<=20?'d-mid':'d-high';
+  var sku = showSku
+    ? '<div class="s1">'+o.brand+' '+o.model+' '+o.gen+'</div><div class="s2">'+specLine(o)+' · '+o.id+'</div>'
+    : '<div class="s1">'+specLine(o)+'</div><div class="s2">'+o.id+(o.live?' · live':'')+'</div>';
+  return '<div class="orow'+(countered?' countered':'')+'">'+
+    '<div class="c-sku">'+sku+'</div>'+
+    '<div class="c"><div class="cv">'+fmtDate(o.fillBy)+'</div><div class="cs">'+daysOut(o.fillBy)+'d to accept</div></div>'+
+    '<div class="c"><div class="cv">'+fmtDate(o.deliverBy)+'</div><div class="cs">'+s.label+' · $'+s.cost+' ship</div></div>'+
+    '<div class="c"><div class="cv">'+(o.loc.city?o.loc.city+', '+o.loc.state:(o.loc.zip||'—'))+'</div><div class="cs'+(tx.amt===0?' free':'')+'">'+(o.loc.zip||'')+(tx.amt===0?' · no tax':' · tax $'+tx.amt)+'</div></div>'+
+    '<div class="c"><div class="cv">$'+adv+'</div><div class="cs">your list</div></div>'+
+    '<div class="c"><div class="cv">$'+o.price+'</div><div class="cs">all-in</div></div>'+
+    '<div class="c"><div class="cv green">$'+net+'</div><div class="cs">net to you</div></div>'+
+    '<div class="c"><span class="discpill '+dcls+'">'+askDisc+'% off</span>'+(!countered&&askDisc<=SETTINGS.autoFillPct?'<div class="cs free">⚡ auto-fills</div>':'')+'</div>'+
+    '<div class="c-act">'+(countered
+      ? '<span class="tag tag-pend">⏳ $'+o.counterPrice+' · '+o.counterExp+'</span>'
+      : '<button class="btn btn-gold btn-sm" onclick="askFill(\''+o.id+'\')">Fill</button><button class="btn btn-ghost btn-sm" onclick="askCounter(\''+o.id+'\')">Counter</button>')+'</div>'+
+  '</div>';
+}
+function groupCard(b){
+  return '<div class="grp">'+
+    '<div class="grp-h">'+
+      '<div class="thumb">👟</div>'+
+      '<div class="grp-id"><div class="nm">'+b.brand+' '+b.model+' '+b.gen+(b.live?' <span class="tag tag-live">● live</span>':'')+'</div>'+
+        '<div class="mt">'+b.cat+' · Retail $'+b.msrp+'</div>'+swatchRow(b.colors)+'</div>'+
+      '<div class="grp-m">'+
+        '<div><div class="l">Buyers</div><div class="v">'+b.count+'</div></div>'+
+        '<div><div class="l">Earliest fill-by</div><div class="v">'+fmtDate(b.earliestFill)+'</div></div>'+
+        '<div><div class="l">Revenue</div><div class="v">$'+b.total+'</div></div>'+
+        '<div><div class="l">Net</div><div class="v green">$'+b.net+'</div></div>'+
+      '</div>'+
+      '<button class="btn btn-gold" onclick="askFillAll(\''+b.key+'\')">Fill all '+b.count+'</button>'+
+    '</div>'+
+    '<div class="otable">'+colHead()+sortOrders(b.orders).map(function(o){return orowHTML(o,false);}).join('')+'</div>'+
+  '</div>';
+}
+function renderOpen(){
+  var host=document.getElementById('bundleList'), feed=feedOrders();
+  document.getElementById('openBadge').textContent=feed.length;
+  if(!feed.length){ host.innerHTML=ctrlBar()+'<div class="empty"><b>No open demand for your catalog yet</b>New committed orders drop in as buyers post them.</div>'; return; }
+  if(GROUP){
+    host.innerHTML=ctrlBar()+bundles().map(groupCard).join('');
+  } else {
+    host.innerHTML=ctrlBar()+'<div class="grp"><div class="otable">'+colHead()+
+      sortOrders(feed).map(function(o){return orowHTML(o,true);}).join('')+'</div></div>';
+  }
+}
+
+function renderFulfillment(){
+  var host=document.getElementById('ffList');
+  document.getElementById('fulfillBadge').textContent=WON.length;
+  if(!WON.length){ host.innerHTML='<div class="empty"><b>Nothing to ship yet</b>Orders you fill land here, ready to label and ship.</div>'; return; }
+  var STEPS=['accepted','label','shipped','delivered'], LBL={accepted:'Accepted',label:'Label',shipped:'Shipped',delivered:'Delivered'};
+  host.innerHTML=WON.map(function(o,i){
+    var si=STEPS.indexOf(o.stage);
+    var steps=STEPS.map(function(s,idx){
+      return (idx>0?'<span class="arr">›</span>':'')+'<span class="stp'+(idx<=si?' done':'')+'"><span class="ball">'+(idx<=si?'✓':(idx+1))+'</span>'+LBL[s]+'</span>';
+    }).join('');
+    var addr = si>=1 ? '<div class="ship-to"><b>'+(o.street||'1 Demo St')+'</b><br>'+(o.loc.city||'')+(o.loc.city?', ':'')+o.loc.state+' '+o.loc.zip+'</div>'
+                     : '<div class="ship-to">Ship-to address revealed at label</div>';
+    var action;
+    if(o.stage==='accepted') action='<button class="btn btn-navy btn-sm" onclick="advance('+i+')">Generate label</button>';
+    else if(o.stage==='label') action='<button class="btn btn-gold btn-sm" onclick="advance('+i+')">Mark shipped</button>';
+    else if(o.stage==='shipped') action='<button class="btn btn-ghost btn-sm" onclick="advance('+i+')">Mark delivered</button>';
+    else action='<span class="tag tag-live">✓ Delivered</span>';
+    var trk = o.tracking ? '<div class="s2" style="font-size:11.5px;color:var(--ink2);margin-top:3px">Tracking '+o.tracking+'</div>' : '';
+    return '<div class="ff">'+
+      '<div class="spec"><div class="s1">'+o.brand+' '+o.model+' '+o.gen+'</div>'+
+        '<div class="s2">'+o.color+' · '+o.gender+' US '+o.size+(o.width==='Wide'?' · Wide':'')+' · '+o.id+' · by '+fmtDate(o.deliverBy)+'</div>'+trk+'</div>'+
+      addr+
+      '<div class="pay"><div class="l">Payout</div><div class="v">$'+o.payout+'</div></div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end"><div class="steps">'+steps+'</div>'+action+'</div>'+
+    '</div>';
+  }).join('');
+}
+function advance(i){
+  var o=WON[i], order=['accepted','label','shipped','delivered'], si=order.indexOf(o.stage);
+  if(si<order.length-1){
+    o.stage=order[si+1];
+    if(o.stage==='label'){ o.street=rint(100,9900)+' '+rpick(['Market St','Pine Ave','Oak Blvd','Cedar Way','Birch Ln','Mission St']); }
+    if(o.stage==='shipped'){ o.tracking='1Z'+rint(100,999)+rint(1000,9999)+rint(10,99); }
+  }
+  renderFulfillment(); renderPayouts();
+}
+
+function renderPayouts(){
+  var locked=0,paid=0;
+  WON.forEach(function(o){ if(o.stage==='shipped'||o.stage==='delivered') paid+=o.payout; else locked+=o.payout; });
+  document.getElementById('stLocked').textContent='$'+locked.toLocaleString();
+  document.getElementById('stPaid').textContent='$'+paid.toLocaleString();
+  document.getElementById('stWon').textContent=WON.length;
+}
+
+function renderAll(){ renderOpen(); renderFulfillment(); renderPayouts(); updateLive(); }
+function updateLive(){ document.getElementById('liveCount').textContent=SYNCED?(feedOrders().length+' open orders'):'demand live'; }
+
+/* ================= actions ================= */
+var pendingFill=null;
+function findOrder(id){ return ORDERS.filter(function(o){return o.id===id;})[0]; }
+function askFill(id){
+  var o=findOrder(id); if(!o) return;
+  pendingFill={type:'one',ids:[id]};
+  var s=shipOf(o), tx=taxOf(o), net=o.price-s.cost-tx.amt;
+  document.getElementById('fillTitle').textContent='Fill this order';
+  document.getElementById('fillBody').innerHTML=
+    '<div class="m-row"><span class="k">'+o.brand+' '+o.model+' '+o.gen+'</span><span class="v">'+o.id+'</span></div>'+
+    '<div class="m-row"><span class="k">Spec</span><span class="v">'+specLine(o)+'</span></div>'+
+    '<div class="m-row"><span class="k">Ship to · by</span><span class="v">'+(o.loc.city?o.loc.city+', '+o.loc.state+' ':'')+o.loc.zip+' · '+fmtDate(o.deliverBy)+'</span></div>'+
+    '<div class="m-row"><span class="k">Revenue (all-in)</span><span class="v">$'+o.price+'</span></div>'+
+    '<div class="m-row"><span class="k">− Shipping · '+s.label+' ('+s.d+'d window)</span><span class="v">−$'+s.cost+'</span></div>'+
+    '<div class="m-row"><span class="k">− Sales tax · '+(tx.rate*100).toFixed(2)+'% to '+(o.loc.zip||'—')+' (you remit)</span><span class="v">'+(tx.amt===0?'$0':'−$'+tx.amt)+'</span></div>'+
+    '<div class="m-row"><span class="k">Net to you</span><span class="v big">$'+net+'</span></div>'+
+    '<div class="m-pay">Paid the moment you ship · no Pacer fees</div>';
+  document.getElementById('fillConfirm').onclick=function(){ doFill([id]); };
+  openModal('fillOv');
+}
+function askFillAll(key){
+  var b=bundles().filter(function(x){return x.key===key;})[0]; if(!b) return;
+  var ids=b.orders.filter(function(o){return o.status==='open';}).map(function(o){return o.id;});
+  if(!ids.length){ closeModal('fillOv'); return; }
+  var open=b.orders.filter(function(o){return o.status==='open';});
+  var rev=open.reduce(function(a,o){return a+o.price;},0);
+  var net=open.reduce(function(a,o){return a+netOf(o);},0);
+  document.getElementById('fillTitle').textContent='Fill all '+ids.length+' orders';
+  document.getElementById('fillBody').innerHTML=
+    '<div class="m-row"><span class="k">'+b.brand+' '+b.model+' '+b.gen+'</span><span class="v">'+ids.length+' buyers</span></div>'+
+    '<div class="m-row"><span class="k">Ships</span><span class="v">individually to each buyer</span></div>'+
+    '<div class="m-row"><span class="k">Total revenue (all-in)</span><span class="v">$'+rev+'</span></div>'+
+    '<div class="m-row"><span class="k">− Shipping &amp; tax (you cover)</span><span class="v">−$'+(rev-net)+'</span></div>'+
+    '<div class="m-row"><span class="k">Net to you</span><span class="v big">$'+net+'</span></div>'+
+    '<div class="m-pay">Each ships individually · paid on ship · no Pacer fees</div>';
+  document.getElementById('fillConfirm').onclick=function(){ doFill(ids); };
+  openModal('fillOv');
+}
+function doFill(ids){
+  ids.forEach(function(id){
+    var o=findOrder(id); if(!o||o.status==='won') return;
+    o.status='won';
+    WON.unshift(Object.assign({},o,{stage:'accepted',payout:o.price,tracking:null,street:null}));
+  });
+  ORDERS=ORDERS.filter(function(o){return o.status!=='won';});
+  closeModal('fillOv');
+  renderAll();
+  toast('⚡','Won '+ids.length+' order'+(ids.length>1?'s':'')+' · moved to Fulfillment');
+}
+
+var cntId=null, cntExp='48h';
+function askCounter(id){
+  var o=findOrder(id); if(!o) return; cntId=id; cntExp='48h';
+  document.getElementById('cntSub').textContent=o.brand+' '+o.model+' '+o.gen+' · their price $'+o.price;
+  document.getElementById('cntPrice').value=o.price+5;
+  [].forEach.call(document.querySelectorAll('#cntSeg button'),function(b){ b.classList.toggle('on', b.textContent==='48h'); });
+  document.getElementById('cntSend').onclick=function(){ doCounter(id); };
+  openModal('cntOv');
+}
+function cntPick(btn,v){ cntExp=v; [].forEach.call(btn.parentNode.children,function(b){b.classList.remove('on');}); btn.classList.add('on'); }
+function doCounter(id){
+  var o=findOrder(id); if(!o) return;
+  var p=parseInt((document.getElementById('cntPrice').value||'').replace(/[^0-9]/g,''),10)||o.price;
+  o.status='countered'; o.counterPrice=p; o.counterExp=cntExp;
+  closeModal('cntOv'); renderOpen(); updateLive();
+  toast('📨','Counter sent to the buyer'+"'"+'s Pacer account — we'+"'"+'ll alert you if they accept');
+}
+
+function openModal(id){ document.getElementById(id).classList.add('on'); }
+function closeModal(id){ document.getElementById(id).classList.remove('on'); }
+
+/* ================= tabs / store ================= */
+function showTab(t){
+  TAB=t;
+  document.getElementById('page-settings').classList.remove('on');
+  document.getElementById('syncRow').style.display='';
+  document.getElementById('tabsRow').style.display='';
+  ['open','fulfill','pay'].forEach(function(x){
+    document.getElementById('page-'+x).classList.toggle('on',x===t);
+    document.getElementById('tab-'+x).classList.toggle('on',x===t);
+  });
+  if(t==='fulfill') renderFulfillment();
+  if(t==='pay') renderPayouts();
+}
+
+/* ---- settings (synced from Shopify, each line overridable) ---- */
+var EDITKEY=null;
+function setGet(k){ var p=k.split('.'); return p.length>1?SETTINGS[p[0]][p[1]]:SETTINGS[p[0]]; }
+function setPut(k,v){ var p=k.split('.'); if(p.length>1) SETTINGS[p[0]][p[1]]=v; else SETTINGS[p[0]]=v; }
+function settingRows(){ return [
+  {sec:'Catalog · synced from Shopify'},
+  {label:'Platform', val:'Shopify · connected'},
+  {label:'Catalog SKUs', val:'485 · last synced today'},
+  {sec:'Shipping rates · by delivery speed (your cost)'},
+  {key:'ship.ground', label:'Ground', sub:'14+ day delivery window — the cheapest service', unit:'$'},
+  {key:'ship.twoDay', label:'2-day', sub:'8–13 day window', unit:'$'},
+  {key:'ship.express', label:'Express', sub:'4–7 day window', unit:'$'},
+  {key:'ship.overnight', label:'Overnight', sub:'under 4 days — rush', unit:'$'},
+  {sec:'Shipping · destination zone (origin California)'},
+  {label:'In-state · California', val:'Included', muted:true},
+  {key:'ship.zWest', label:'West', sub:'OR, NV, WA, AZ, ID, UT', unit:'+$'},
+  {key:'ship.zNational', label:'National', sub:'all other states', unit:'+$'},
+  {sec:'Auto-fill'},
+  {key:'autoFillPct', label:'Auto-accept at or below', sub:'Orders within this discount off your list price fill automatically', unit:'%'},
+  {sec:'Fulfillment'},
+  {key:'handlingDays', label:'Handling time', sub:'business days to ship after you accept', unit:'days'},
+  {sec:'Payouts & policy · from Shopify'},
+  {label:'Payout method', val:'Shopify Payments · ••4821'},
+  {label:'Sales tax', val:'Auto-remitted by destination'},
+  {label:'Returns', val:'Defect or error only'}
+]; }
+function fmtSetting(r){ var v=setGet(r.key);
+  if(r.unit==='$') return '$'+v;
+  if(r.unit==='+$') return '+$'+v;
+  if(r.unit==='%') return v+'%';
+  if(r.unit==='days') return v+(v==1?' day':' days');
+  return v;
+}
+function settingRowHTML(r){
+  if(r.sec) return '<div class="set-sec">'+r.sec+'</div>';
+  var rt;
+  if(r.key && EDITKEY===r.key){
+    rt='<input id="setin" class="setinp" inputmode="decimal" value="'+setGet(r.key)+'" onkeydown="if(event.key===\'Enter\')saveSetting(\''+r.key+'\');if(event.key===\'Escape\')cancelSetting()">'+
+       '<button class="setlink" onclick="saveSetting(\''+r.key+'\')">Save</button><button class="setlink gh" onclick="cancelSetting()">Cancel</button>';
+  } else if(r.key){
+    rt='<span class="set-val">'+fmtSetting(r)+'</span><button class="penbtn" onclick="editSetting(\''+r.key+'\')" aria-label="Edit '+r.label+'">✎</button>';
+  } else {
+    rt='<span class="set-val'+(r.muted?' muted':'')+'">'+r.val+'</span>';
+  }
+  return '<div class="set-row"><div class="set-l"><div class="set-label">'+r.label+'</div>'+(r.sub?'<div class="set-sub">'+r.sub+'</div>':'')+'</div><div class="set-r">'+rt+'</div></div>';
+}
+function renderSettings(){ var el=document.getElementById('setList'); if(el) el.innerHTML=settingRows().map(settingRowHTML).join(''); }
+function editSetting(k){ EDITKEY=k; renderSettings(); var i=document.getElementById('setin'); if(i){ i.focus(); i.select(); } }
+function cancelSetting(){ EDITKEY=null; renderSettings(); }
+function saveSetting(k){
+  var i=document.getElementById('setin');
+  if(i){ var v=parseFloat((i.value||'').replace(/[^0-9.]/g,'')); if(isNaN(v)||v<0) v=setGet(k); setPut(k, Math.round(v*100)/100); }
+  EDITKEY=null; renderSettings(); renderOpen();   // shipping/auto-fill changes ripple into open-order economics
+}
+function showSettings(){
+  document.getElementById('syncRow').style.display='none';
+  document.getElementById('tabsRow').style.display='none';
+  ['open','fulfill','pay'].forEach(function(x){ document.getElementById('page-'+x).classList.remove('on'); });
+  document.getElementById('page-settings').classList.add('on');
+  renderSettings(); window.scrollTo(0,0);
+}
+
+/* ================= real-time injections ================= */
+function startRealtime(){
+  stopRealtime();
+  if(reduceMotion) return;        // motion-safe: skip the live drip entirely
+  rtTimer=setInterval(function(){
+    if(document.hidden || TAB!=='open' || injections>=INJ_CAP) return;
+    injectOrder();
+  }, 15000);
+}
+function stopRealtime(){ if(rtTimer){ clearInterval(rtTimer); rtTimer=null; } }
+function injectOrder(){
+  var pool=CATALOG.filter(function(m){return carries(m.brand);});
+  var m=rpick(pool); var gender=RNG()<0.6?"Men's":"Women's"; var c=rpick(m.colors);
+  var o={ id:'TPX-'+rint(9000,9999), brand:m.brand, model:m.model, gen:m.gen, cat:m.cat, msrp:m.msrp,
+    color:c.n, colorHex:c.c, gender:gender, size:gender==="Men's"?menSize():womenSize(),
+    width:RNG()<0.16?'Wide':'Standard', loc:rpick(CITIES), price:m.msrp-rint(8,34),
+    deliverBy:toISO(addDays(today(),rint(21,49))), fillBy:toISO(addDays(today(),rint(4,6))), status:'open' };
+  ORDERS.push(o); injections++;
+  renderOpen(); updateLive();
+  toast('🆕','New order · <b>'+m.brand+' '+m.model+' '+m.gen+'</b>, '+(gender==="Men's"?'M':'W')+o.size+' — their price <b>$'+o.price+'</b>');
+}
+
+/* ================= toast ================= */
+var toastTimer=null;
+function toast(ic,msg){
+  var t=document.getElementById('toast');
+  t.querySelector('.t-ic').textContent=ic; document.getElementById('toastTxt').innerHTML=msg;
+  t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('on'); }, 4200);
+}
+
+/* ================= init ================= */
+document.addEventListener('visibilitychange',function(){ /* interval self-pauses via the hidden check */ });
+(function init(){
+  ORDERS=seedOrders().concat(readLiveOrders());
+  WON=seedWon();
+  renderStoreSel(); renderSync(); renderAll(); startRealtime();
+  document.getElementById('openSub').textContent=persona().name+' · committed demand matched to your catalog, bundled by model.';
+})();
+</script>
+</body></html>
