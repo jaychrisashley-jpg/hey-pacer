@@ -130,7 +130,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none}
 
 /* ---- order cost table ---- */
 .otable{padding:0}
-.ohead,.orow{display:grid;grid-template-columns:1.7fr .72fr 1.05fr 1.2fr .85fr .78fr .82fr 86px 138px;gap:12px;align-items:center;padding:11px 18px}
+.ohead,.orow{display:grid;grid-template-columns:1.55fr .72fr .92fr 1.05fr .95fr .72fr .66fr .82fr 80px 128px;gap:10px;align-items:center;padding:11px 16px}
 .discpill{display:inline-block;font-weight:800;font-size:13.5px;padding:5px 11px;border-radius:var(--rpill);white-space:nowrap}
 .d-low{background:var(--greenWash);color:var(--green)}
 .d-mid{background:var(--goldWash);color:var(--goldDeep)}
@@ -227,7 +227,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none}
 
 <!-- top bar -->
 <div class="top"><div class="wrap top-in">
-  <div class="logo"><span class="dot"></span>Pacer<span class="sub">Merchants</span></div>
+  <a class="logo" href="index.html" title="Back to Pacer search"><span class="dot"></span>Pacer<span class="sub">Merchants</span></a>
   <div class="top-right">
     <span class="live"><span class="blip"></span><span id="liveCount">demand live</span></span>
     <button class="gearbtn" onclick="showSettings()" title="Settings" aria-label="Settings">⚙</button>
@@ -292,7 +292,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none}
     <div class="note" style="margin-top:14px">Shipping is priced by <b>delivery speed</b> (a longer window lets Pacer choose cheaper ground service) and <b>destination zone</b> (distance from your California warehouse — carriers bill by zone × service level). Defaults mirror a typical 2–3 lb shoe parcel. Sales tax is auto-remitted by destination, so it isn't set here.</div>
   </div>
 
-  <div class="foot">Pacer for Merchants · committed orders settle on the TrustPixel exchange · demo environment</div>
+  <div class="foot">Pacer for Merchants · demo environment · powered by <a href="https://www.trustpixel.ai" target="_blank" rel="noopener" style="color:var(--navy);font-weight:700">TrustPixel</a></div>
 </div>
 
 <!-- fill confirm modal -->
@@ -569,7 +569,7 @@ function ctrlBar(){
     '</select></label></div>';
 }
 function colHead(){
-  return '<div class="ohead"><span>SKU · spec</span><span>Fill by</span><span>Deliver by</span><span>Ship to</span><span>Your price</span><span>Revenue</span><span>Net payout</span><span>Discount</span><span></span></div>';
+  return '<div class="ohead"><span>SKU · spec</span><span>Fill by</span><span>Deliver by</span><span>Ship to</span><span>Your advertised price</span><span>Shipping</span><span>Tax</span><span>Net payout</span><span>Add\'l discount</span><span></span></div>';
 }
 function orowHTML(o, showSku){
   var s=shipOf(o), tx=taxOf(o), net=o.price-s.cost-tx.amt, countered=o.status==='countered';
@@ -581,10 +581,11 @@ function orowHTML(o, showSku){
   return '<div class="orow'+(countered?' countered':'')+'">'+
     '<div class="c-sku">'+sku+'</div>'+
     '<div class="c"><div class="cv">'+fmtDate(o.fillBy)+'</div><div class="cs">'+daysOut(o.fillBy)+'d to accept</div></div>'+
-    '<div class="c"><div class="cv">'+fmtDate(o.deliverBy)+'</div><div class="cs">'+s.label+' · $'+s.cost+' ship</div></div>'+
-    '<div class="c"><div class="cv">'+(o.loc.city?o.loc.city+', '+o.loc.state:(o.loc.zip||'—'))+'</div><div class="cs'+(tx.amt===0?' free':'')+'">'+(o.loc.zip||'')+(tx.amt===0?' · no tax':' · tax $'+tx.amt)+'</div></div>'+
+    '<div class="c"><div class="cv">'+fmtDate(o.deliverBy)+'</div><div class="cs">'+s.label+'</div></div>'+
+    '<div class="c"><div class="cv">'+(o.loc.city?o.loc.city+', '+o.loc.state:(o.loc.zip||'—'))+'</div><div class="cs">'+(o.loc.zip||'')+'</div></div>'+
     '<div class="c"><div class="cv">$'+adv+'</div><div class="cs">your list</div></div>'+
-    '<div class="c"><div class="cv">$'+o.price+'</div><div class="cs">all-in</div></div>'+
+    '<div class="c"><div class="cv">−$'+s.cost+'</div><div class="cs">'+s.label+(s.zone?' · +zone':'')+'</div></div>'+
+    '<div class="c"><div class="cv'+(tx.amt===0?' green':'')+'">'+(tx.amt===0?'$0':'−$'+tx.amt)+'</div><div class="cs'+(tx.amt===0?' free':'')+'">'+(tx.amt===0?'no tax':(tx.rate*100).toFixed(1)+'% '+(o.loc.state||''))+'</div></div>'+
     '<div class="c"><div class="cv green">$'+net+'</div><div class="cs">net to you</div></div>'+
     '<div class="c"><span class="discpill '+dcls+'">'+askDisc+'% off</span>'+(!countered&&askDisc<=SETTINGS.autoFillPct?'<div class="cs free">⚡ auto-fills</div>':'')+'</div>'+
     '<div class="c-act">'+(countered
