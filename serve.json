@@ -1,8 +1,4 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/merchant", "destination": "/merchant.html" },
-    { "source": "**", "destination": "/index.html" }
-  ]
+  "trailingSlash": false
 }
